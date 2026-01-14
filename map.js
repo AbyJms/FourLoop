@@ -96,6 +96,56 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
+function getUserLocationOnce(callback) {
+  const cached = sessionStorage.getItem("zoneMapUserLocation");
+
+  // 1️⃣ If we already have coords → use them, DO NOTHING ELSE
+  if (cached) {
+    try {
+      const { lat, lng } = JSON.parse(cached);
+      if (typeof lat === "number" && typeof lng === "number") {
+        callback(lat, lng);
+        return; // 🔥 stops everything
+      }
+    } catch (e) { }
+  }
+
+  // 2️⃣ If no cache, check permission state FIRST
+  if (!navigator.permissions || !navigator.geolocation) return;
+
+  navigator.permissions.query({ name: "geolocation" }).then((status) => {
+    if (status.state === "granted") {
+      // permission already granted → safe to ask ONCE
+      navigator.geolocation.getCurrentPosition((pos) => {
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+
+        sessionStorage.setItem(
+          "zoneMapUserLocation",
+          JSON.stringify({ lat, lng })
+        );
+
+        callback(lat, lng);
+      });
+    } else if (status.state === "prompt") {
+      // first ever ask
+      navigator.geolocation.getCurrentPosition((pos) => {
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+
+        sessionStorage.setItem(
+          "zoneMapUserLocation",
+          JSON.stringify({ lat, lng })
+        );
+
+        callback(lat, lng);
+      });
+    } else {
+      console.warn("Location denied");
+    }
+  });
+}
+
 // ================= ZONE MAP FEATURE =================
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -169,33 +219,10 @@ document.addEventListener("DOMContentLoaded", () => {
   window.zoneMapInstance.setView([10.5276, 76.2144], 14);
 
   // Try cached location first (so we don't prompt again in this session)
-  const cached = sessionStorage.getItem("zoneMapUserLocation");
-  if (cached) {
-    try {
-      const { lat, lng } = JSON.parse(cached);
-      if (typeof lat === "number" && typeof lng === "number") {
-        addUserLocation(lat, lng);
-      }
-    } catch (e) {
-      // ignore parse errors
-    }
-  } else if (navigator.geolocation) {
-    // Ask once per page session
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        const lat = pos.coords.latitude;
-        const lng = pos.coords.longitude;
-        sessionStorage.setItem(
-          "zoneMapUserLocation",
-          JSON.stringify({ lat, lng })
-        );
-        addUserLocation(lat, lng);
-      },
-      () => {
-        // silently stay on fallback
-      }
-    );
-  }
+  getUserLocationOnce((lat, lng) => {
+    addUserLocation(lat, lng);
+  });
+
 
   // Fixed Demogorgan spawn locations (preloaded, not user-editable, spread out)
   const demogorganLocations = [

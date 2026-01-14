@@ -8,7 +8,6 @@
   <body>
     <header class="topbar">
       <div class="logo">STRANGER TRASH</div>
-      <button class="logout">Logout</button>
     </header>
 
     <main class="main-layout auth-layout">
@@ -27,25 +26,28 @@
           <h2 class="auth-title">Welcome back</h2>
           <p class="auth-subtitle">Log in to continue in STRANGER TRASH.</p>
 
-          <form class="auth-form" autocomplete="off">
+          <form id="authForm" class="auth-form" autocomplete="off">
             <label class="auth-field">
               <span>Email</span>
               <input
-                type="email"
-                name="loginEmail"
-                placeholder="you@example.com"
-                required
-              />
+  id="loginEmail"
+  type="email"
+  name="loginEmail"
+  placeholder="you@example.com"
+  required
+/>
+
             </label>
 
             <label class="auth-field">
               <span>Password</span>
               <input
-                type="password"
-                name="loginPassword"
-                placeholder="••••••••"
-                required
-              />
+  id="loginPassword"
+  type="password"
+  name="loginPassword"
+  placeholder="••••••••"
+  required
+/>
             </label>
 
             <div class="auth-actions">
@@ -70,7 +72,7 @@
             Create your account and start clearing the zone.
           </p>
 
-          <form class="auth-form" autocomplete="off">
+          <form id="registerForm" class="auth-form" autocomplete="off">
             <div class="auth-row">
               <label class="auth-field">
                 <span>First name</span>
@@ -161,6 +163,7 @@
         });
       })();
     </script>
+    <script src="auth.js"></script>
   </body>
 </html>
 

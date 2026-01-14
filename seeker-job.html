@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Stranger Trash – Active Jobs</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<header class="topbar">
+  <div class="logo">STRANGER TRASH <span class="role-tag">SEEKER</span></div>
+  <button class="logout">Logout</button>
+</header>
+
+<main class="main-layout">
+
+  <!-- NAV -->
+  <nav class="tabs">
+    <a class="tab-button" href="seeker-dashboard.html">Dashboard</a>
+    <a class="tab-button" href="seeker-post.html">Post Jobs</a>
+    <a class="tab-button active" href="seeker-job.html">Active Jobs</a>
+  </nav>
+
+  <!-- ACTIVE JOBS LIST -->
+  <section class="card spacious">
+
+    <h2>Active Community Jobs</h2>
+
+    <!-- JOB CARD -->
+    <section class="card job-card">
+      <div class="job-header">
+        <h3>Plastic Hotspot Cleanup</h3>
+        <span class="status live">LIVE</span>
+      </div>
+
+      <p class="job-desc">
+        Cleanup of plastic waste accumulated near roadside and drainage areas.
+      </p>
+
+      <div class="job-meta">
+        <div>
+          <span class="meta-label">People Needed</span>
+          <span class="meta-value">10</span>
+        </div>
+        <div>
+          <span class="meta-label">Duration</span>
+          <span class="meta-value">3 hrs</span>
+        </div>
+        <div>
+          <span class="meta-label">Tokens</span>
+          <span class="meta-value">25</span>
+        </div>
+        <div>
+          <span class="meta-label">Location</span>
+          <span class="meta-value">MG Road</span>
+        </div>
+      </div>
+
+      <div class="job-actions">
+        <button class="secondary-btn">Pause</button>
+        <button class="secondary-btn" disabled>Resume</button>
+        <button class="primary-btn">Finish</button>
+        <button class="secondary-btn" disabled>Verify</button>
+      </div>
+    </section>
+
+    <!-- JOB CARD -->
+    <section class="card job-card">
+      <div class="job-header">
+        <h3>Drain Clearing Operation</h3>
+        <span class="status paused">PAUSED</span>
+      </div>
+
+      <p class="job-desc">
+        Clearing clogged drains to prevent waterlogging during rains.
+      </p>
+
+      <div class="job-meta">
+        <div>
+          <span class="meta-label">People Needed</span>
+          <span class="meta-value">6</span>
+        </div>
+        <div>
+          <span class="meta-label">Duration</span>
+          <span class="meta-value">2 hrs</span>
+        </div>
+        <div>
+          <span class="meta-label">Tokens</span>
+          <span class="meta-value">15</span>
+        </div>
+        <div>
+          <span class="meta-label">Location</span>
+          <span class="meta-value">Market Area</span>
+        </div>
+      </div>
+
+      <div class="job-actions">
+        <button class="secondary-btn">Pause</button>
+        <button class="secondary-btn" disabled>Resume</button>
+        <button class="primary-btn">Finish</button>
+        <button class="secondary-btn" disabled>Verify</button>
+      </div>
+    </section>
+
+  </section>
+
+</main>
+
+</body>
+</html>
