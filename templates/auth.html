@@ -3,12 +3,17 @@
   <head>
     <meta charset="UTF-8" />
     <title>Stranger Trash - Login / Register</title>
-
     <!-- CSS -->
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='style.css') }}"
-    />
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+    <style>
+      .toggle-password {
+        margin-left: 8px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #007bff;
+      }
+    </style>
   </head>
 
   <body>
@@ -23,60 +28,20 @@
           <button class="auth-tab" data-view="register">Register</button>
         </div>
 
-        <div
-          id="authMessage"
-          class="auth-message"
-          role="alert"
-          aria-live="polite"
-        ></div>
+        <div id="authMessage" class="auth-message" role="alert" aria-live="polite"></div>
 
         <!-- LOGIN PANEL -->
         <section id="loginPanel" class="auth-panel active" aria-label="Login form">
           <h2 class="auth-title">Welcome back</h2>
-          <p class="auth-subtitle">
-            Log in to continue in STRANGER TRASH.
-          </p>
+          <p class="auth-subtitle">Log in to continue in STRANGER TRASH.</p>
 
           <form id="authForm" class="auth-form" autocomplete="off">
             <label class="auth-field">
               <span>Email</span>
-              <input
-                id="loginEmail"
-                type="email"
-                name="loginEmail"
-                placeholder="you@example.com"
-                required
-              />
+              <input id="loginEmail" type="email" name="loginEmail" placeholder="you@example.com" required />
             </label>
 
             <label class="auth-field">
               <span>Password</span>
-              <input
-                id="loginPassword"
-                type="password"
-                name="loginPassword"
-                placeholder="••••••••"
-                required
-              />
-            </label>
-
-            <div class="auth-actions">
-              <button type="submit" class="primary-btn auth-primary-btn">
-                Login
-              </button>
-              <button type="button" class="secondary-btn auth-secondary-btn">
-                Forgot password
-              </button>
-            </div>
-          </form>
-        </section>
-
-        <!-- REGISTER PANEL -->
-        <section
-          id="registerPanel"
-          class="auth-panel"
-          aria-label="Register form"
-        >
-          <h2 class="auth-title">Join STRANGER TRASH</h2>
-          <p class="auth-subtitle">
-            Create your account and start clearing the zone
+              <input id="loginPassword" type="password" name="loginPassword" placeholder="••••••••" required />
+              <button type="button" class="toggle-password" data-target="loginPasswo
