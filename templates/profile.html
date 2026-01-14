@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Trash Dash - Profile</title>
+
+    <!-- Main CSS -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+
+  <body>
+    <header class="topbar">
+      <div class="logo">STRANGER TRASH</div>
+      <button class="logout">Logout</button>
+    </header>
+
+    <main class="main-layout">
+      <nav class="tabs">
+        <a class="tab-button" href="/dashboard">Dashboard</a>
+        <a class="tab-button" href="/mission">Missions</a>
+        <a class="tab-button active" href="/profile">Profile</a>
+        <a class="tab-button" href="/store">Redeem Store</a>
+      </nav>
+
+      <section id="profile" aria-label="Player profile">
+        <section class="profile-header card">
+          <div class="profile-main">
+            <div class="avatar-placeholder" aria-label="Player avatar"></div>
+            <div>
+              <p class="section-label">USERNAME</p>
+              <h2 class="profile-username">NeonVanguard</h2>
+              <p class="current-title">
+                Current Title: <span>Emperor of Wastefront</span>
+              </p>
+              <p class="title-badge">King • Queen • Emperor • Empress</p>
+            </div>
+          </div>
+
+          <div class="profile-actions">
+            <button class="primary-btn">Profile</button>
+            <button class="secondary-btn">Logout</b
