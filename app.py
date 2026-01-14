@@ -105,4 +105,4 @@ if __name__ == "__main__":
     app = create_app()
     with app.app_context():
         db.create_all()  # creates database.db if it doesn’t exist
-    app.run(debug=Tr
+    app.run(debug=True)
