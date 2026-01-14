@@ -24,9 +24,22 @@ def create_app(config_name='default'):
     # Initialize extensions
     db.init_app(app)
     migrate = Migrate(app, db)
-    CORS(app, resources={r"/api/*": {"origins": app.config.get('CORS_ORIGINS', '*').split(',')}})
+    CORS(
+    app,
+    resources={r"/api/*": {"origins": "*"}},
+    supports_credentials=True,
+    allow_headers=["Content-Type", "Authorization"]
+)
+
+
     jwt = JWTManager(app)
-    
+    @app.after_request
+    def add_cors_headers(response):
+        response.headers["Access-Control-Allow-Origin"] = "*"
+        response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+        response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
+        return response
+
     # Create upload folder if it doesn't exist
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
     

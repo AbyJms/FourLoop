@@ -1,93 +1,77 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const API_BASE = "http://localhost:5000/api";
+console.log("auth.js loaded");
 
-  const authForm = document.getElementById("authForm");
-  const registerForm = document.getElementById("registerForm");
+const API_BASE = "http://127.0.0.1:5000/api";
 
-  /* -------------------------
-     LOGIN
-  ------------------------- */
-  if (authForm) {
-    authForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
+// ---------------- LOGIN ----------------
+document.getElementById("loginBtn").addEventListener("click", async (e) => {
+  e.preventDefault();
 
-      const email = document.getElementById("loginEmail").value.trim();
-      const password = document.getElementById("loginPassword").value.trim();
+  const username = document.getElementById("login-username").value.trim();
+  const password = document.getElementById("login-password").value.trim();
 
-      if (!email || !password) {
-        alert("Fill all fields");
-        return;
-      }
-
-      try {
-        const res = await fetch(`${API_BASE}/auth/login`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password })
-        });
-
-        const data = await res.json();
-
-        if (!res.ok) {
-          alert(data.error || "Login failed");
-          return;
-        }
-
-        // SAVE JWT
-        localStorage.setItem("access_token", data.access_token);
-
-        // redirect
-        window.location.href = "dashboard.html";
-      } catch (err) {
-        alert("Backend not reachable. Is Flask running?");
-      }
-    });
+  if (!username || !password) {
+    alert("Enter username and password");
+    return;
   }
 
-  /* -------------------------
-     REGISTER
-  ------------------------- */
-  if (registerForm) {
-    registerForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
+  const res = await fetch(`${API_BASE}/auth/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username, password })
+  });
 
-      const email = registerForm.registerEmail.value.trim();
-      const username = registerForm.username.value.trim();
-      const password = registerForm.registerPassword.value.trim();
+  const data = await res.json();
 
-      if (!email || !username || !password) {
-        alert("Fill all fields");
-        return;
-      }
-
-      const payload = {
-        email,
-        username,
-        password,
-        user_type: "collector" // can change later
-      };
-
-      try {
-        const res = await fetch(`${API_BASE}/auth/register`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload)
-        });
-
-        const data = await res.json();
-
-        if (!res.ok) {
-          alert(data.error || "Registration failed");
-          return;
-        }
-
-        alert("Registration successful. Please log in.");
-
-        // switch to login view
-        document.querySelector('[data-view="login"]').click();
-      } catch (err) {
-        alert("Backend not reachable. Is Flask running?");
-      }
-    });
+  if (!res.ok) {
+    alert(data.error || "Login failed");
+    return;
   }
+
+  // STORE AUTH
+  localStorage.setItem("access_token", data.access_token);
+  localStorage.setItem("user", JSON.stringify(data.user));
+
+  // 🔥 ROLE BASED ROUTING
+  if (data.user.user_type === "seeker") {
+    window.location.replace("seeker-dashboard.html");
+  } else {
+    window.location.replace("dashboard.html");
+  }
+});
+
+// ---------------- REGISTER ----------------
+document.getElementById("registerBtn").addEventListener("click", async (e) => {
+  e.preventDefault();
+
+  const first = document.getElementById("first-name").value.trim();
+  const last = document.getElementById("last-name").value.trim();
+  const username = document.getElementById("username").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value.trim();
+
+  if (!first || !last || !username || !email || !password) {
+    alert("Fill all fields");
+    return;
+  }
+
+  const res = await fetch(`${API_BASE}/auth/register`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      full_name: `${first} ${last}`,
+      username,
+      email,
+      password,
+      user_type: "collector" // change to seeker if needed
+    })
+  });
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    alert(data.error || "Registration failed");
+    return;
+  }
+
+  alert("Registered successfully. Now login.");
 });

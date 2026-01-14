@@ -26,35 +26,38 @@
           <h2 class="auth-title">Welcome back</h2>
           <p class="auth-subtitle">Log in to continue in STRANGER TRASH.</p>
 
-          <form id="authForm" class="auth-form" autocomplete="off">
+          <form class="auth-form" autocomplete="off">
             <label class="auth-field">
-              <span>Email</span>
+              <span>Username</span>
               <input
-  id="loginEmail"
-  type="email"
-  name="loginEmail"
-  placeholder="you@example.com"
-  required
-/>
-
+                id="login-username"
+                placeholder="you@example.com"
+                required
+              />
             </label>
 
             <label class="auth-field">
               <span>Password</span>
               <input
-  id="loginPassword"
-  type="password"
-  name="loginPassword"
-  placeholder="••••••••"
-  required
-/>
+                id="login-password"
+                type="password"
+                placeholder="••••••••"
+                required
+              />
             </label>
 
             <div class="auth-actions">
-              <button type="submit" class="primary-btn auth-primary-btn">
+              <button
+                type="button"
+                id="loginBtn"
+                class="primary-btn auth-primary-btn"
+              >
                 Login
               </button>
-              <button type="button" class="secondary-btn auth-secondary-btn">
+              <button
+                type="button"
+                class="secondary-btn auth-secondary-btn"
+              >
                 Forgot password
               </button>
             </div>
@@ -72,13 +75,13 @@
             Create your account and start clearing the zone.
           </p>
 
-          <form id="registerForm" class="auth-form" autocomplete="off">
+          <form class="auth-form" autocomplete="off">
             <div class="auth-row">
               <label class="auth-field">
                 <span>First name</span>
                 <input
+                  id="first-name"
                   type="text"
-                  name="firstName"
                   placeholder="Alex"
                   required
                 />
@@ -86,8 +89,8 @@
               <label class="auth-field">
                 <span>Last name</span>
                 <input
+                  id="last-name"
                   type="text"
-                  name="lastName"
                   placeholder="River"
                   required
                 />
@@ -97,8 +100,8 @@
             <label class="auth-field">
               <span>Username</span>
               <input
+                id="username"
                 type="text"
-                name="username"
                 placeholder="NeonVanguard"
                 required
               />
@@ -107,8 +110,8 @@
             <label class="auth-field">
               <span>Email</span>
               <input
+                id="email"
                 type="email"
-                name="registerEmail"
                 placeholder="you@example.com"
                 required
               />
@@ -117,15 +120,19 @@
             <label class="auth-field">
               <span>Password</span>
               <input
+                id="password"
                 type="password"
-                name="registerPassword"
                 placeholder="Minimum 8 characters"
                 required
               />
             </label>
 
             <div class="auth-actions">
-              <button type="submit" class="primary-btn auth-primary-btn">
+              <button
+                type="button"
+                id="registerBtn"
+                class="primary-btn auth-primary-btn"
+              >
                 Register
               </button>
             </div>
@@ -135,17 +142,15 @@
     </main>
 
     <script>
-      // Simple toggle between login and register panels
+      // Toggle between login and register panels
       (function () {
         var tabs = document.querySelectorAll(".auth-tab");
         var login = document.getElementById("loginPanel");
         var register = document.getElementById("registerPanel");
-        if (!tabs.length || !login || !register) return;
 
         tabs.forEach(function (tab) {
           tab.addEventListener("click", function () {
             var view = this.getAttribute("data-view");
-            if (!view) return;
 
             tabs.forEach(function (t) {
               t.classList.remove("active");
@@ -163,7 +168,7 @@
         });
       })();
     </script>
+
     <script src="auth.js"></script>
   </body>
 </html>
-

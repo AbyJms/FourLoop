@@ -237,6 +237,12 @@
 
     <script src="dashboard.js"></script>
     <script src="map.js"></script>
+    <script>
+      const token = localStorage.getItem("access_token");
+      if (!token) {
+        window.location.href = "auth.html";
+      }
+    </script>
   </body>
 </html>
 
