@@ -42,7 +42,7 @@ def create_app():
             return jsonify({"error": "User already exists"}), 400
 
         user = User(
-            username=data["username"],
+            email=data["email"],
             role=data.get("role", "player"),
         )
         user.password_hash = generate_password_hash(data["password"])
