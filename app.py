@@ -17,9 +17,8 @@ def create_app():
     app.config["SECRET_KEY"] = "change-this-secret-key"
 
     # ⚠️ Use PostgreSQL (update password accordingly)
-    app.config["SQLALCHEMY_DATABASE_URI"] = (
-        "postgresql://postgres:hridya@localhost:5432/job_platform"
-    )
+    app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://postgres:hridya@172.17.105.182:5432/job_platform"
+
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
     # ---------------- EXTENSIONS ----------------
