@@ -1,82 +1,106 @@
-<!-- REGISTER PANEL -->
-<section id="registerPanel" class="auth-panel" aria-label="Register form">
-  <h2 class="auth-title">Join STRANGER TRASH</h2>
-  <p class="auth-subtitle">
-    Create your account and start clearing the zone.
-  </p>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Stranger Trash - Login / Register</title>
 
-  <form id="registerForm" class="auth-form" autocomplete="off">
-    <label class="auth-field">
-      <span>Username</span>
-      <input type="text" id="registerUsername" name="registerUsername" placeholder="Your username" required />
-    </label>
+    <!-- CSS -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
 
-    <label class="auth-field">
-      <span>Email</span>
-      <input type="email" id="registerEmail" name="registerEmail" placeholder="you@example.com" required />
-    </label>
+  <body>
+    <header class="topbar">
+      <div class="logo">STRANGER TRASH</div>
+    </header>
 
-    <label class="auth-field">
-      <span>Password</span>
-      <input type="password" id="registerPassword" name="registerPassword" placeholder="••••••••" required />
-      <button type="button" class="toggle-password" data-target="registerPassword">Show</button>
-    </label>
+    <main class="main-layout auth-layout">
+      <section class="card auth-card">
+        <div class="auth-tabs">
+          <button class="auth-tab active" data-view="login">Login</button>
+          <button class="auth-tab" data-view="register">Register</button>
+        </div>
 
-    <label class="auth-field">
-      <span>Confirm Password</span>
-      <input type="password" id="registerConfirmPassword" name="registerConfirmPassword" placeholder="••••••••" required />
-      <button type="button" class="toggle-password" data-target="registerConfirmPassword">Show</button>
-    </label>
+        <div
+          id="authMessage"
+          class="auth-message"
+          role="alert"
+          aria-live="polite"
+        ></div>
 
-    <div class="auth-actions">
-      <button type="submit" class="primary-btn auth-primary-btn">Register</button>
-    </div>
+        <!-- LOGIN PANEL -->
+        <section id="loginPanel" class="auth-panel active" aria-label="Login form">
+          <h2 class="auth-title">Welcome back</h2>
+          <p class="auth-subtitle">
+            Log in to continue in STRANGER TRASH.
+          </p>
 
-    <div class="divider">OR</div>
+          <form id="authForm" class="auth-form" autocomplete="off">
+            <label class="auth-field">
+              <span>Email</span>
+              <input
+                id="loginEmail"
+                type="email"
+                name="loginEmail"
+                placeholder="you@example.com"
+                required
+              />
+            </label>
 
-    <div class="oauth-buttons">
-      <button type="button" class="google-btn">Continue with Google</button>
-      <button type="button" class="facebook-btn">Continue with Facebook</button>
-      <button type="button" class="github-btn">Continue with GitHub</button>
-    </div>
-  </form>
-</section>
+            <label class="auth-field">
+              <span>Password</span>
+              <input
+                id="loginPassword"
+                type="password"
+                name="loginPassword"
+                placeholder="••••••••"
+                required
+              />
+            </label>
 
-<!-- Scripts at the end of body -->
-<script>
-  // Tab switching
-  const tabs = document.querySelectorAll('.auth-tab');
-  const loginPanel = document.getElementById('loginPanel');
-  const registerPanel = document.getElementById('registerPanel');
+            <div class="auth-actions">
+              <button type="submit" class="primary-btn auth-primary-btn">
+                Login
+              </button>
+              <button type="button" class="secondary-btn auth-secondary-btn">
+                Forgot password
+              </button>
+            </div>
+          </form>
+        </section>
 
-  tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      tabs.forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-
-      if (tab.dataset.view === 'login') {
-        loginPanel.classList.add('active');
-        registerPanel.classList.remove('active');
-      } else {
-        registerPanel.classList.add('active');
-        loginPanel.classList.remove('active');
-      }
-    });
-  });
-
-  // Show/hide password toggle
-  const toggleButtons = document.querySelectorAll('.toggle-password');
-  toggleButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const input = document.getElementById(btn.dataset.target);
-      if (input.type === 'password') {
-        input.type = 'text';
-        btn.textContent = 'Hide';
-      } else {
-        input.type = 'password';
-        btn.textContent = 'Show';
-      }
-    });
-  });
-</script>
-</body>
+        <!-- REGISTER PANEL -->
+        <section
+          id="registerPanel"
+          class="auth-panel"
+          aria-label="Register form"
+        >
+          <h2 class="auth-title">Join STRANGER TRASH</h2>
+          <p class="auth-subtitle">
+            Create your account and start clearing the zone
+            <script>
+              const tabs = document.querySelectorAll('.auth-tab');
+              const loginPanel = document.getElementById('loginPanel');
+              const registerPanel = document.getElementById('registerPanel');
+            
+              tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                  // Remove 'active' class from all tabs
+                  tabs.forEach(t => t.classList.remove('active'));
+                  // Add 'active' class to clicked tab
+                  tab.classList.add('active');
+            
+                  // Show/hide panels
+                  if (tab.dataset.view === 'login') {
+                    loginPanel.classList.add('active');
+                    registerPanel.classList.remove('active');
+                  } else {
+                    registerPanel.classList.add('active');
+                    loginPanel.classList.remove('active');
+                  }
+                });
+              });
+            </script>
+</body>             
