@@ -1,47 +1,65 @@
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
-from flask_login import LoginManager, login_user, login_required, logout_user
+from flask_login import (
+    LoginManager,
+    login_user,
+    login_required,
+    logout_user,
+    current_user,
+)
+from werkzeug.security import generate_password_hash, check_password_hash
 from models import db, User
 
 def create_app():
     app = Flask(__name__, template_folder="templates", static_folder="static")
 
-    # Config
+    # ---------------- CONFIG ----------------
     app.config["SECRET_KEY"] = "change-this-secret-key"
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
+
+    # ⚠️ Use PostgreSQL (update password accordingly)
+    app.config["SQLALCHEMY_DATABASE_URI"] = (
+        "postgresql://postgres:hridya@localhost:5432/job_platform"
+    )
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-    # Init extensions
+    # ---------------- EXTENSIONS ----------------
     db.init_app(app)
     CORS(app)
 
     login_manager = LoginManager()
-    login_manager.login_view = "home"
+    login_manager.login_view = "login_page"
     login_manager.init_app(app)
 
     @login_manager.user_loader
     def load_user(user_id):
         return User.query.get(int(user_id))
 
-    # ---------------- AUTH API ----------------
+    # ---------------- API ROUTES ----------------
 
     @app.route("/register", methods=["POST"])
     def register():
         data = request.json
-        if User.query.filter_by(email=data["email"]).first():
-            return jsonify({"error": "Email already exists"}), 400
+        if User.query.filter_by(username=data["username"]).first():
+            return jsonify({"error": "User already exists"}), 400
 
-        user = User(email=data["email"])
-        user.set_password(data["password"])
+        user = User(
+            username=data["username"],
+            role=data.get("role", "player"),
+        )
+        user.password_hash = generate_password_hash(data["password"])
+
         db.session.add(user)
         db.session.commit()
-        return jsonify({"message": "User registered successfully"}), 201
+        return jsonify({"message": "User registered"}), 201
 
     @app.route("/login", methods=["POST"])
     def login():
         data = request.json
-        user = User.query.filter_by(email=data["email"]).first()
-        if not user or not user.check_password(data["password"]):
+        user = User.query.filter_by(username=data["username"]).first()
+
+        if not user or not check_password_hash(
+            user.password_hash, data["password"]
+        ):
             return jsonify({"error": "Invalid credentials"}), 401
 
         login_user(user)
@@ -53,36 +71,41 @@ def create_app():
         logout_user()
         return jsonify({"message": "Logged out"}), 200
 
-    # ---------------- HTML PAGES ----------------
+    # ---------------- PAGE ROUTES ----------------
 
     @app.route("/")
-    def home():
+    def login_page():
         return render_template("auth.html")
 
-    @app.route("/dashboard-page")
+    @app.route("/dashboard")
     @login_required
     def dashboard_page():
         return render_template("dashboard.html")
 
-    @app.route("/mission-page")
+    @app.route("/seeker")
     @login_required
-    def mission_page():
-        return render_template("mission.html")
-
-    @app.route("/profile-page")
-    @login_required
-    def profile_page():
-        return render_template("profile.html")
-
-    @app.route("/store-page")
-    @login_required
-    def store_page():
-        return render_template("store.html")
+    def seeker_dashboard():
+        return render_template("seeker-dashboard.html")
 
     @app.route("/seeker/post")
     @login_required
     def seeker_post():
-        return render_template("seeker_post.html")
+        return render_template("seeker-post.html")
+
+    @app.route("/mission")
+    @login_required
+    def mission_page():
+        return render_template("mission.html")
+
+    @app.route("/profile")
+    @login_required
+    def profile_page():
+        return render_template("profile.html")
+
+    @app.route("/store")
+    @login_required
+    def store_page():
+        return render_template("store.html")
 
     return app
 
