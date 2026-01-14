@@ -1153,5 +1153,45 @@ body {
   border-color: #ff0000;
   box-shadow: 0 0 12px rgba(255, 0, 0, 0.6);
 }
+/* =========================
+   Mission Inner Cards
+========================= */
+
+.quest-card {
+  border: 1px solid #ff0000;
+  color: #ffffff;
+}
+
+.quest-card h4 {
+  color: #ffffff;
+}
+
+.quest-card p {
+  color: #fffefe;
+  opacity: 0.9;
+}
+
+.quest-card .quest-meta li {
+  color: #ffffff;
+}
+
+.quest-card .quest-tag.main,
+.quest-card .quest-tag.side {
+  font-weight: 700;
+}
+
+.quest-meta {
+  list-style-position: inside;
+  padding-left: 1.5em; /* this is the “tab space” */
+}
+
+.heading{
+  color: #ff0404;
+}
+
+
+
+
+
 
 
