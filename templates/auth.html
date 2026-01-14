@@ -80,3 +80,27 @@
           <h2 class="auth-title">Join STRANGER TRASH</h2>
           <p class="auth-subtitle">
             Create your account and start clearing the zone
+            <script>
+              const tabs = document.querySelectorAll('.auth-tab');
+              const loginPanel = document.getElementById('loginPanel');
+              const registerPanel = document.getElementById('registerPanel');
+            
+              tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                  // Remove 'active' class from all tabs
+                  tabs.forEach(t => t.classList.remove('active'));
+                  // Add 'active' class to clicked tab
+                  tab.classList.add('active');
+            
+                  // Show/hide panels
+                  if (tab.dataset.view === 'login') {
+                    loginPanel.classList.add('active');
+                    registerPanel.classList.remove('active');
+                  } else {
+                    registerPanel.classList.add('active');
+                    loginPanel.classList.remove('active');
+                  }
+                });
+              });
+            </script>
+</body>            
