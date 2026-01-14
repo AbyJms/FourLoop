@@ -7,7 +7,7 @@ def load_user(user_id):
     # Replace this with actual user lookup logic
     return {"id": user_id, "name": "Test User"}
 
-# Register route
+# Register route (POST only)
 @app.route("/register", methods=["POST"])
 def register():
     data = request.get_json()
@@ -16,7 +16,7 @@ def register():
     password = data.get("password")
     return jsonify({"message": f"User {username} registered successfully!"})
 
-# Login route
+# Login route (POST only)
 @app.route("/login", methods=["POST"])
 def login():
     data = request.get_json()
