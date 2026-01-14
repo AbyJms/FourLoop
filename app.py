@@ -1,35 +1,29 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
-from flask_login import LoginManager, login_user, login_required, logout_user, current_user
-from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import LoginManager, login_user, login_required, logout_user
 from models import db, User
 
-
 def create_app():
-    # serve HTML files that live in the repo root (e.g. auth.html, dashboard.html)
-    # and make root URLs (e.g. `/style.css`) resolve to project files during dev.
-    app = Flask(__name__, template_folder=".", static_folder=".", static_url_path="")
+    app = Flask(__name__, template_folder="templates", static_folder="static")
 
-    # Core configuration
+    # Config
     app.config["SECRET_KEY"] = "change-this-secret-key"
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-    # Initialize extensions
+    # Init extensions
     db.init_app(app)
+    CORS(app)
 
     login_manager = LoginManager()
-    login_manager.login_view = "login"
+    login_manager.login_view = "home"
     login_manager.init_app(app)
-
-    # Enable CORS for all routes
-    CORS(app)
 
     @login_manager.user_loader
     def load_user(user_id):
         return User.query.get(int(user_id))
 
-    # ------------------ API ROUTES ------------------
+    # ---------------- AUTH API ----------------
 
     @app.route("/register", methods=["POST"])
     def register():
@@ -51,91 +45,49 @@ def create_app():
             return jsonify({"error": "Invalid credentials"}), 401
 
         login_user(user)
-        return jsonify({"message": "Login successful", "email": user.email}), 200
+        return jsonify({"message": "Login successful"}), 200
 
     @app.route("/logout", methods=["POST"])
     @login_required
     def logout():
         logout_user()
-        return jsonify({"message": "Logged out successfully"}), 200
+        return jsonify({"message": "Logged out"}), 200
 
-    @app.route("/dashboard", methods=["GET"])
-    @login_required
-    def dashboard():
-        return jsonify({
-            "currentZone": "Crimson Wastefront",
-            "boss": {"name": "Queen of Plastics", "hp": 42},
-            "mainQuests": [
-                "Clear 3 hotspot alleys of plastic waste",
-                "Coordinate a 10-member clean-up squad",
-                "Secure recycling drop-points in 2 zones"
-            ],
-            "sideQuests": [
-                "Photo-document the weirdest litter artifact",
-                "Design a meme to recruit new players",
-                "Map an undocumented dumping spot"
-            ],
-            "party": [
-                {"name": "EchoRanger", "role": "Squad Lead", "status": "Online"},
-                {"name": "NeonRecycler", "role": "Scout", "status": "In Run"},
-                {"name": "GlassKnight", "role": "Heavy Lifter", "status": "Offline"},
-            ],
-            "leaderboard": {
-                "zonal": [
-                    {"team": "Crimson Sweepers", "score": 12340},
-                    {"team": "Neon Nomads", "score": 11980},
-                    {"team": "Waste Warriors", "score": 10420},
-                ],
-                "national": [
-                    {"team": "Empire of Clean", "score": 120450},
-                    {"team": "Redline Reclaimers", "score": 118900},
-                    {"team": "ZeroWaste Union", "score": 115320},
-                ]
-            },
-            "rewards": {
-                "tierProgress": 65,
-                "tokens": 3250,
-                "redeemed": 7,
-                "nextMilestone": "Legendary Badge"
-            }
-        })
-from flask import render_template
+    # ---------------- HTML PAGES ----------------
 
-@app.route("/")
-def home():
-    return render_template("auth.html")  # login/register page
-
-@app.route("/dashboard-page")
-@login_required
-def dashboard_page():
-    return render_template("dashboard.html")
-
-@app.route("/profile-page")
-@login_required
-def profile_page():
-    return render_template("profile.html")
-
-@app.route("/mission-page")
-@login_required
-def mission_page():
-    return render_template("mission.html")
-
-@app.route("/store-page")
-@login_required
-def store_page():
-    return render_template("store.html")
-
-    # Serve a default frontend page at root to avoid 404 on '/'.
     @app.route("/")
-    def index():
-        # default to the auth page; change to 'dashboard.html' if you prefer
-        return app.send_static_file("auth.html")
+    def home():
+        return render_template("auth.html")
+
+    @app.route("/dashboard-page")
+    @login_required
+    def dashboard_page():
+        return render_template("dashboard.html")
+
+    @app.route("/mission-page")
+    @login_required
+    def mission_page():
+        return render_template("mission.html")
+
+    @app.route("/profile-page")
+    @login_required
+    def profile_page():
+        return render_template("profile.html")
+
+    @app.route("/store-page")
+    @login_required
+    def store_page():
+        return render_template("store.html")
+
+    @app.route("/seeker/post")
+    @login_required
+    def seeker_post():
+        return render_template("seeker_post.html")
 
     return app
-
 
 if __name__ == "__main__":
     app = create_app()
     with app.app_context():
-        db.create_all()  # creates database.db if it doesn’t exist
+        db.create_all()
     app.run(debug=True)
