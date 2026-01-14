@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Student / Employee Registration | CareerForge</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+      <div class="logo">
+        <div class="logo-circle">CF</div>
+        <span>Career<span class="accent">Forge</span></span>
+      </div>
+
+      <div class="nav-links">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="resume.html">Resume</a>
+        <a href="analyzer.html">Analyzer</a>
+        <a href="roadmap.html">Roadmap</a>
+        <a href="journal.html">Journal</a>
+        <a href="projects.html">Projects</a>
+      </div>
+
+      <div class="auth-links">
+        <a href="login.html" class="login-btn">Login</a>
+        <a href="register.html" class="register-btn">Register</a>
+      </div>
+    </nav>
+
+    <section class="auth-page">
+      <div class="auth-card">
+        <div class="auth-header-row">
+          <h1>Student / Employee Registration</h1>
+          <a href="register.html" class="auth-back-link">← Back to role selection</a>
+        </div>
+        <p class="auth-subtitle">
+          Create your proof-based profile so recruiters can trust your skills.
+        </p>
+
+        <form id="studentRegisterForm" novalidate>
+          <div class="form-row">
+            <div class="form-field">
+              <label for="firstName">First name</label>
+              <input
+                type="text"
+                id="firstName"
+                name="firstName"
+                placeholder="John"
+                required
+              />
+              <div class="field-error" data-for="firstName"></div>
+            </div>
+
+            <div class="form-field">
+              <label for="lastName">Last name</label>
+              <input
+                type="text"
+                id="lastName"
+                name="lastName"
+                placeholder="Doe"
+                required
+              />
+              <div class="field-error" data-for="lastName"></div>
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label for="username">Username</label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              placeholder="johndoe123"
+              required
+            />
+            <div class="field-error" data-for="username"></div>
+          </div>
+
+          <div class="form-field">
+            <label for="email">Gmail</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="you@gmail.com"
+              required
+            />
+            <div class="field-hint">Must be a valid Gmail address (ends with @gmail.com).</div>
+            <div class="field-error" data-for="email"></div>
+          </div>
+
+          <div class="form-field">
+            <label for="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Create a strong password"
+              required
+            />
+            <div class="field-hint">
+              At least 8 characters with 1 uppercase, 1 lowercase, 1 number and 1 symbol.
+            </div>
+            <div class="field-error" data-for="password"></div>
+          </div>
+
+          <button type="submit" class="primary-btn full-width">Confirm</button>
+          <div id="formMessage" class="form-message" aria-live="polite"></div>
+        </form>
+      </div>
+    </section>
+
+    <footer>
+      <span>CareerForge</span>
+      <span>Your journey from learning to proof starts here</span>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+  </html>
+
