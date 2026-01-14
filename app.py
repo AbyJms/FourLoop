@@ -8,7 +8,7 @@ from flask_login import (
     current_user,
 )
 from werkzeug.security import generate_password_hash, check_password_hash
-from models import db, User
+from models import db, User, WasteRequest, WasteViolation
 
 def create_app():
     app = Flask(__name__, template_folder="templates", static_folder="static")
