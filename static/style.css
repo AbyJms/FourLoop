@@ -713,6 +713,8 @@ body {
 
 /* ---- Auth (Login / Register) ---- */
 
+/* ---- Auth (Login / Register) ---- */
+
 .auth-layout {
   display: flex;
   justify-content: center;
@@ -721,19 +723,20 @@ body {
 }
 
 .auth-card {
-  max-width: 600px;
+  max-width: 520px;
   width: 100%;
+  padding: 26px;
 }
 
 .auth-tabs {
   display: flex;
   gap: 8px;
-  margin-bottom: 18px;
+  margin-bottom: 22px;
 }
 
 .auth-tab {
   flex: 1;
-  padding: 8px 0;
+  padding: 10px 0;
   border-radius: 999px;
   border: 1px solid rgba(255, 0, 0, 0.6);
   background: transparent;
@@ -742,12 +745,13 @@ body {
   font-size: 12px;
   letter-spacing: 1px;
   cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .auth-tab.active {
-  background: rgba(255, 0, 0, 0.2);
+  background: rgba(255, 0, 0, 0.25);
   color: #fff;
-  box-shadow: 0 0 16px rgba(255, 0, 0, 0.6);
+  box-shadow: 0 0 18px rgba(255, 0, 0, 0.7);
 }
 
 .auth-panel {
@@ -759,69 +763,75 @@ body {
 }
 
 .auth-title {
-  margin-bottom: 4px;
+  font-size: 20px;
+  margin-bottom: 6px;
 }
 
 .auth-subtitle {
   font-size: 13px;
-  opacity: 0.7;
-  margin-bottom: 16px;
+  opacity: 0.75;
+  margin-bottom: 18px;
 }
 
 .auth-form {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 
 .auth-field {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
   font-size: 13px;
 }
 
 .auth-field span {
-  opacity: 0.8;
+  opacity: 0.85;
 }
 
 .auth-field input {
-  background: rgba(5, 5, 15, 0.9);
-  border-radius: 8px;
-  border: 1px solid rgba(255, 0, 0, 0.4);
-  padding: 8px 10px;
+  background: rgba(5, 5, 15, 0.95);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 0, 0, 0.45);
+  padding: 10px 12px;
   color: #fff;
   outline: none;
+  font-size: 14px;
+}
+
+.auth-field input::placeholder {
+  opacity: 0.5;
 }
 
 .auth-field input:focus {
   border-color: #ff0000;
-  box-shadow: 0 0 12px rgba(255, 0, 0, 0.6);
-}
-
-.auth-actions {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-  margin-top: 8px;
-}
-
-.auth-primary-btn {
-  flex: 1;
-  justify-content: center;
-}
-
-.auth-secondary-btn {
-  font-size: 11px;
-  padding: 6px 10px;
+  box-shadow: 0 0 14px rgba(255, 0, 0, 0.7);
 }
 
 .auth-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px;
+  gap: 12px;
 }
+
+.auth-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.auth-primary-btn {
+  flex: 1;
+  padding: 10px 0;
+  font-size: 12px;
+}
+
+.auth-secondary-btn {
+  padding: 8px 14px;
+  font-size: 11px;
+}
+
 
 /* ---- Responsive tweaks ---- */
 @media (max-width: 960px) {
