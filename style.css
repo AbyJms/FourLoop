@@ -880,16 +880,64 @@ body {
   height: 260px;
   border-radius: 14px;
   overflow: hidden;
-  border: 1px solid rgba(255, 0, 0, 0.7);
-  background: radial-gradient(circle at top, #1b1020, #05050a);
-  box-shadow: inset 0 0 30px rgba(255, 0, 0, 0.3);
+  border: 1px solid rgba(0, 0, 0, 0.6);
+  background: #05050a;
+  /* Soft outer shadow to make the map feel inset / glowing */
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.9);
 }
 
 #zoneMap {
   width: 100%;
   height: 100%;
   z-index: 1;
-  filter: grayscale(0.4) contrast(1.1);
+  /* Normal, untinted tiles */
+  filter: none;
+}
+
+.map-fullscreen-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 900;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 0, 0, 0.35);
+  background: rgba(20, 20, 30, 0.85);
+  color: #fff;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+}
+
+.map-fullscreen-btn:hover {
+  background: rgba(35, 35, 50, 0.9);
+}
+
+.map-wrapper.is-fullscreen {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  border-radius: 0;
+  border: none;
+  box-shadow: none;
+  z-index: 3000;
+  background: #000;
+}
+
+.map-wrapper.is-fullscreen .map-fullscreen-btn {
+  top: 16px;
+  right: 16px;
+  background: rgba(0, 0, 0, 0.75);
+}
+
+#zoneMap {
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  /* Normal, untinted tiles */
+  filter: none;
 }
 
 /* overlay text */
@@ -975,6 +1023,13 @@ body {
   border: 2px solid #ff0000;
   box-shadow: 0 0 12px rgba(255, 0, 0, 0.7);
   background-color: #000;
+}
+
+.demogorgan-icon {
+  border-radius: 50%;
+  border: none;
+  box-shadow: none;
+  background: transparent;
 }
 
 /* --- Seeker Dashboard Spacing Fix --- */
