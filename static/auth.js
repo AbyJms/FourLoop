@@ -51,56 +51,24 @@
   }
 
   // Register submit
-  if (registerForm) {
-    registerForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const email = registerForm.querySelector('input[name="registerEmail"]')?.value.trim();
-      const password = registerForm.querySelector('input[name="registerPassword"]')?.value;
-      if (!email || !password) {
-        setMessage("Email and password are required", "error");
-        return;
-      }
-      setMessage("Creating account...", "info");
-      try {
-        await postJSON("/register", { email, password });
-        setMessage("Account created. You can log in now.", "success");
-        // switch back to login tab
-        tabs.forEach((t) => t.classList.remove("active"));
-        loginPanel?.classList.add("active");
-        registerPanel?.classList.remove("active");
-        const loginTab = document.querySelector('.auth-tab[data-view="login"]');
-        loginTab?.classList.add("active");
-      } catch (err) {
-        setMessage(err.message, "error");
-      }
-    });
-  }
-})();
-document.addEventListener("DOMContentLoaded", () => {
-  const form = document.getElementById("authForm");
-  if (!form) {
-    console.error("authForm not found");
-    return;
-  }
+  <!-- HTML -->
+<div class="auth-tabs">
+  <button class="auth-tab active" data-view="login">Login</button>
+  <button class="auth-tab" data-view="register">Register</button>
+</div>
 
-  form.addEventListener("submit", (e) => {
-    e.preventDefault(); // 🔥 critical
+<div id="loginPanel" class="auth-panel active">
+  <form id="loginForm">
+    <input type="email" id="loginEmail" placeholder="Email" required>
+    <input type="password" id="loginPassword" placeholder="Password" required>
+    <button type="submit">Login</button>
+  </form>
+</div>
 
-    const email = document.getElementById("loginEmail").value;
-    const password = document.getElementById("loginPassword").value;
-
-    if (!email || !password) {
-      alert("Fill all fields");
-      return;
-    }
-
-    const user = {
-      email,
-      username: "NeonVanguard"
-    };
-
-    sessionStorage.setItem("authUser", JSON.stringify(user));
-
-    window.location.href = "dashboard.html";
-  });
-});
+<div id="registerPanel" class="auth-panel">
+  <form id="registerForm">
+    <input type="email" name="registerEmail" placeholder="Email" required>
+    <input type="password" name="registerPassword" placeholder="Password" required>
+    <button type="submit">Register</button>
+  </form>
+</div>
