@@ -108,58 +108,122 @@ document.addEventListener("DOMContentLoaded", () => {
     attributionControl: false
   });
 
-  L.tileLayer(
-    'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-    {
-      attribution: '&copy; OpenStreetMap contributors',
-      maxZoom: 19
+  // 🔹 Default OpenStreetMap tiles (normal light map)
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution: '&copy; OpenStreetMap contributors',
+    maxZoom: 19
+  }).addTo(window.zoneMapInstance);
+
+  // 🔹 Fullscreen toggle
+  const mapWrapper = mapContainer.closest(".map-wrapper");
+  const fullscreenBtn = mapWrapper?.querySelector(".map-fullscreen-btn");
+
+  const applySizeFix = () => {
+    if (window.zoneMapInstance) {
+      setTimeout(() => window.zoneMapInstance.invalidateSize(), 150);
     }
-  ).addTo(window.zoneMapInstance);
+  };
+
+  const toggleFullscreen = () => {
+    if (!mapWrapper) return;
+    const isActive = mapWrapper.classList.toggle("is-fullscreen");
+    if (fullscreenBtn) {
+      fullscreenBtn.textContent = isActive ? "Exit Fullscreen" : "Fullscreen";
+    }
+    applySizeFix();
+  };
+
+  if (fullscreenBtn) {
+    fullscreenBtn.addEventListener("click", toggleFullscreen);
+  }
+
+  // Helper to add the user marker and center map
+  const addUserLocation = (lat, lng) => {
+    window.zoneMapInstance.setView([lat, lng], 15);
+
+    const userIcon = L.icon({
+      iconUrl: "you.jpg",
+      iconSize: [36, 36], // size of image
+      iconAnchor: [18, 18], // center the icon
+      popupAnchor: [0, -18], // popup position
+      className: "user-map-icon"
+    });
+
+    L.marker([lat, lng], {
+      icon: userIcon
+    })
+      .addTo(window.zoneMapInstance)
+      .bindPopup("You are here");
+  };
+
+  // Fixed Demogorgan icon (large, no outline, cannot be moved by players)
+  const demoGarbageIcon = L.icon({
+    iconUrl: "demogarbage.jpeg",
+    iconSize: [72, 72],
+    iconAnchor: [36, 36],
+    popupAnchor: [0, -36],
+    className: "demogorgan-icon"
+  });
 
   // Default fallback view
   window.zoneMapInstance.setView([10.5276, 76.2144], 14);
 
-  // Try user location
-  navigator.geolocation.getCurrentPosition(
-    (pos) => {
-      const lat = pos.coords.latitude;
-      const lng = pos.coords.longitude;
+  // Try cached location first (so we don't prompt again in this session)
+  const cached = sessionStorage.getItem("zoneMapUserLocation");
+  if (cached) {
+    try {
+      const { lat, lng } = JSON.parse(cached);
+      if (typeof lat === "number" && typeof lng === "number") {
+        addUserLocation(lat, lng);
+      }
+    } catch (e) {
+      // ignore parse errors
+    }
+  } else if (navigator.geolocation) {
+    // Ask once per page session
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+        sessionStorage.setItem(
+          "zoneMapUserLocation",
+          JSON.stringify({ lat, lng })
+        );
+        addUserLocation(lat, lng);
+      },
+      () => {
+        // silently stay on fallback
+      }
+    );
+  }
 
-      window.zoneMapInstance.setView([lat, lng], 15);
+  // Fixed Demogorgan spawn locations (preloaded, not user-editable, spread out)
+  const demogorganLocations = [
+    [10.5400, 76.2200],
+    [10.5200, 76.2050],
+    [10.3500, 76.2785]
+  ];
 
-      const userIcon = L.icon({
-        iconUrl: "you.jpg",
-        iconSize: [36, 36],      // size of image
-        iconAnchor: [18, 18],   // center the icon
-        popupAnchor: [0, -18],  // popup position
-        className: "user-map-icon"
-      });
-
-      L.marker([lat, lng], {
-        icon: userIcon
-      })
-        .addTo(window.zoneMapInstance)
-        .bindPopup("You are here");
-
-    },
-    () => { }
+  window.demogorganHp = 100;
+  window.demogorganMarkers = demogorganLocations.map((coords) =>
+    L.marker(coords, { icon: demoGarbageIcon })
+      .addTo(window.zoneMapInstance)
+      .bindPopup("Demogorgan")
   );
 
-  // Demo quest markers
-  L.circleMarker([10.5282, 76.2150], {
-    radius: 6,
-    color: "#ff4d4d"
-  }).addTo(window.zoneMapInstance);
-
-  L.circleMarker([10.5268, 76.2135], {
-    radius: 6,
-    color: "#ffcc33"
-  }).addTo(window.zoneMapInstance);
-
-  L.circleMarker([10.5272, 76.2128], {
-    radius: 6,
-    color: "#33ff99"
-  }).addTo(window.zoneMapInstance);
+  // Only game logic can change/remove these – e.g., when HP hits 0
+  window.setDemogorganHp = (hp) => {
+    window.demogorganHp = hp;
+    if (hp <= 0 && window.demogorganMarkers) {
+      window.demogorganMarkers.forEach((m) => {
+        try {
+          window.zoneMapInstance.removeLayer(m);
+        } catch (e) {
+          // ignore
+        }
+      });
+    }
+  };
 });
 
 // ================= TAB SWITCHING FIX =================
