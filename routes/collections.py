@@ -1,168 +1,269 @@
 from flask import Blueprint, request, jsonify, current_app
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from werkzeug.utils import secure_filename
-from models import db, User
+from models import db, Collection, User, Transaction, Leaderboard
+from datetime import datetime
 import os
 
-users_bp = Blueprint('users', __name__)
+collections_bp = Blueprint('collections', __name__)
 
 def allowed_file(filename):
     """Check if file extension is allowed."""
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in current_app.config['ALLOWED_EXTENSIONS']
 
-@users_bp.route('/<int:user_id>', methods=['GET'])
+@collections_bp.route('', methods=['POST'])
 @jwt_required()
-def get_user(user_id):
-    """Get user by ID."""
-    current_user_id = get_jwt_identity()
-    user = User.query.get(user_id)
-    
-    if not user:
-        return jsonify({'error': 'User not found'}), 404
-    
-    # Include sensitive data only for own profile
-    include_sensitive = (current_user_id == user_id)
-    return jsonify({'user': user.to_dict(include_sensitive=include_sensitive)}), 200
-
-@users_bp.route('/profile', methods=['PUT'])
-@jwt_required()
-def update_profile():
-    """Update user profile."""
+def create_collection():
+    """Create a new collection entry."""
     current_user_id = get_jwt_identity()
     user = User.query.get(current_user_id)
     
     if not user:
         return jsonify({'error': 'User not found'}), 404
+    
+    if user.user_type != 'collector':
+        return jsonify({'error': 'Only collectors can create collections'}), 403
+    
+    data = request.get_json() if request.is_json else request.form.to_dict()
+    
+    # Validate required fields
+    if not data.get('waste_type') or not data.get('weight'):
+        return jsonify({'error': 'Waste type and weight are required'}), 400
+    
+    weight = float(data['weight'])
+    
+    # Calculate points
+    points_per_kg = current_app.config.get('POINTS_PER_KG', 10)
+    points_earned = int(weight * points_per_kg)
+    
+    # Handle image upload if present
+    image_url = None
+    if 'image' in request.files:
+        file = request.files['image']
+        if file and allowed_file(file.filename):
+            filename = secure_filename(f"collection_{datetime.utcnow().timestamp()}_{file.filename}")
+            filepath = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+            file.save(filepath)
+            image_url = f'/uploads/{filename}'
+    
+    # Create collection
+    collection = Collection(
+        collector_id=current_user_id,
+        report_id=data.get('report_id'),
+        waste_type=data['waste_type'],
+        weight=weight,
+        points_earned=points_earned,
+        location=data.get('location'),
+        latitude=float(data['latitude']) if data.get('latitude') else None,
+        longitude=float(data['longitude']) if data.get('longitude') else None,
+        image_url=image_url or data.get('image_url'),
+        notes=data.get('notes')
+    )
+    
+    try:
+        db.session.add(collection)
+        
+        # Update user points
+        user.points += points_earned
+        
+        # Create transaction
+        transaction = Transaction(
+            user_id=current_user_id,
+            transaction_type='earn',
+            points=points_earned,
+            description=f'Collected {weight}kg of {data["waste_type"]}',
+            collection_id=collection.id
+        )
+        db.session.add(transaction)
+        
+        # Update leaderboard
+        update_leaderboard(current_user_id, weight, points_earned)
+        
+        db.session.commit()
+        
+        return jsonify({
+            'message': 'Collection created successfully',
+            'collection': collection.to_dict(),
+            'points_earned': points_earned
+        }), 201
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': 'Failed to create collection', 'details': str(e)}), 500
+
+def update_leaderboard(user_id, weight, points):
+    """Update leaderboard entry for user."""
+    entry = Leaderboard.query.filter_by(user_id=user_id).first()
+    
+    if not entry:
+        entry = Leaderboard(user_id=user_id)
+        db.session.add(entry)
+    
+    entry.total_collections += 1
+    entry.total_weight += weight
+    entry.total_points += points
+    
+    # Update ranks (simple implementation)
+    all_entries = Leaderboard.query.order_by(Leaderboard.total_points.desc()).all()
+    for idx, e in enumerate(all_entries, 1):
+        e.rank = idx
+
+@collections_bp.route('', methods=['GET'])
+@jwt_required()
+def get_collections():
+    """Get collections with filters."""
+    waste_type = request.args.get('waste_type')
+    verified = request.args.get('verified')
+    my_collections = request.args.get('my_collections', 'false').lower() == 'true'
+    page = request.args.get('page', 1, type=int)
+    per_page = request.args.get('per_page', 20, type=int)
+    
+    current_user_id = get_jwt_identity()
+    
+    query = Collection.query
+    
+    if waste_type:
+        query = query.filter_by(waste_type=waste_type)
+    if verified is not None:
+        query = query.filter_by(verified=verified.lower() == 'true')
+    if my_collections:
+        query = query.filter_by(collector_id=current_user_id)
+    
+    query = query.order_by(Collection.created_at.desc())
+    
+    pagination = query.paginate(page=page, per_page=per_page, error_out=False)
+    
+    return jsonify({
+        'collections': [collection.to_dict() for collection in pagination.items],
+        'total': pagination.total,
+        'pages': pagination.pages,
+        'current_page': page
+    }), 200
+
+@collections_bp.route('/<int:collection_id>', methods=['GET'])
+@jwt_required()
+def get_collection(collection_id):
+    """Get a specific collection."""
+    collection = Collection.query.get(collection_id)
+    
+    if not collection:
+        return jsonify({'error': 'Collection not found'}), 404
+    
+    return jsonify({'collection': collection.to_dict()}), 200
+
+@collections_bp.route('/<int:collection_id>', methods=['PUT'])
+@jwt_required()
+def update_collection(collection_id):
+    """Update a collection."""
+    current_user_id = get_jwt_identity()
+    collection = Collection.query.get(collection_id)
+    
+    if not collection:
+        return jsonify({'error': 'Collection not found'}), 404
+    
+    # Only the collector can update their own collection
+    if collection.collector_id != current_user_id:
+        return jsonify({'error': 'Unauthorized'}), 403
     
     data = request.get_json()
     
     # Update allowed fields
-    updateable_fields = ['full_name', 'phone', 'address', 'latitude', 'longitude']
+    updateable_fields = ['notes', 'location', 'latitude', 'longitude']
     for field in updateable_fields:
         if field in data:
-            setattr(user, field, data[field])
+            setattr(collection, field, data[field])
     
     try:
         db.session.commit()
         return jsonify({
-            'message': 'Profile updated successfully',
-            'user': user.to_dict(include_sensitive=True)
+            'message': 'Collection updated successfully',
+            'collection': collection.to_dict()
         }), 200
     except Exception as e:
         db.session.rollback()
-        return jsonify({'error': 'Failed to update profile', 'details': str(e)}), 500
+        return jsonify({'error': 'Failed to update collection', 'details': str(e)}), 500
 
-@users_bp.route('/profile/image', methods=['POST'])
+@collections_bp.route('/<int:collection_id>/verify', methods=['POST'])
 @jwt_required()
-def upload_profile_image():
-    """Upload profile image."""
+def verify_collection(collection_id):
+    """Verify a collection (admin only - for now any user can verify)."""
+    collection = Collection.query.get(collection_id)
+    
+    if not collection:
+        return jsonify({'error': 'Collection not found'}), 404
+    
+    collection.verified = True
+    
+    try:
+        db.session.commit()
+        return jsonify({
+            'message': 'Collection verified successfully',
+            'collection': collection.to_dict()
+        }), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': 'Failed to verify collection', 'details': str(e)}), 500
+
+@collections_bp.route('/<int:collection_id>', methods=['DELETE'])
+@jwt_required()
+def delete_collection(collection_id):
+    """Delete a collection."""
     current_user_id = get_jwt_identity()
+    collection = Collection.query.get(collection_id)
+    
+    if not collection:
+        return jsonify({'error': 'Collection not found'}), 404
+    
+    if collection.collector_id != current_user_id:
+        return jsonify({'error': 'Unauthorized'}), 403
+    
+    # Refund points
     user = User.query.get(current_user_id)
+    user.points -= collection.points_earned
     
-    if not user:
-        return jsonify({'error': 'User not found'}), 404
+    # Update leaderboard
+    entry = Leaderboard.query.filter_by(user_id=current_user_id).first()
+    if entry:
+        entry.total_collections -= 1
+        entry.total_weight -= collection.weight
+        entry.total_points -= collection.points_earned
     
-    if 'image' not in request.files:
-        return jsonify({'error': 'No image file provided'}), 400
-    
-    file = request.files['image']
-    
-    if file.filename == '':
-        return jsonify({'error': 'No file selected'}), 400
-    
-    if file and allowed_file(file.filename):
-        filename = secure_filename(f"user_{user.id}_{file.filename}")
-        filepath = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
-        file.save(filepath)
-        
-        user.profile_image = f'/uploads/{filename}'
-        
-        try:
-            db.session.commit()
-            return jsonify({
-                'message': 'Profile image uploaded successfully',
-                'image_url': user.profile_image
-            }), 200
-        except Exception as e:
-            db.session.rollback()
-            return jsonify({'error': 'Failed to save image', 'details': str(e)}), 500
-    
-    return jsonify({'error': 'Invalid file type'}), 400
+    try:
+        db.session.delete(collection)
+        db.session.commit()
+        return jsonify({'message': 'Collection deleted successfully'}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': 'Failed to delete collection', 'details': str(e)}), 500
 
-@users_bp.route('/stats', methods=['GET'])
+@collections_bp.route('/stats', methods=['GET'])
 @jwt_required()
-def get_user_stats():
-    """Get user statistics."""
-    current_user_id = get_jwt_identity()
-    user = User.query.get(current_user_id)
+def get_collection_stats():
+    """Get collection statistics."""
+    # Overall stats
+    total_collections = Collection.query.count()
+    total_weight = db.session.query(db.func.sum(Collection.weight)).scalar() or 0
+    verified_collections = Collection.query.filter_by(verified=True).count()
     
-    if not user:
-        return jsonify({'error': 'User not found'}), 404
+    # Waste type breakdown
+    waste_stats = db.session.query(
+        Collection.waste_type,
+        db.func.count(Collection.id).label('count'),
+        db.func.sum(Collection.weight).label('total_weight')
+    ).group_by(Collection.waste_type).all()
     
-    from models import Collection, GarbageReport, Transaction
-    
-    if user.user_type == 'collector':
-        total_collections = Collection.query.filter_by(collector_id=user.id).count()
-        total_weight = db.session.query(db.func.sum(Collection.weight)).filter_by(
-            collector_id=user.id
-        ).scalar() or 0
-        verified_collections = Collection.query.filter_by(
-            collector_id=user.id, verified=True
-        ).count()
-        
-        stats = {
-            'total_collections': total_collections,
-            'total_weight': float(total_weight),
-            'verified_collections': verified_collections,
-            'points': user.points
+    waste_breakdown = [
+        {
+            'waste_type': stat[0],
+            'count': stat[1],
+            'total_weight': float(stat[2] or 0)
         }
-    else:  # seeker
-        total_reports = GarbageReport.query.filter_by(reporter_id=user.id).count()
-        pending_reports = GarbageReport.query.filter_by(
-            reporter_id=user.id, status='pending'
-        ).count()
-        collected_reports = GarbageReport.query.filter_by(
-            reporter_id=user.id, status='collected'
-        ).count()
-        
-        stats = {
-            'total_reports': total_reports,
-            'pending_reports': pending_reports,
-            'collected_reports': collected_reports,
-            'points': user.points
-        }
-    
-    # Common stats
-    total_transactions = Transaction.query.filter_by(user_id=user.id).count()
-    total_redeemed = db.session.query(db.func.sum(Transaction.points)).filter_by(
-        user_id=user.id, transaction_type='redeem'
-    ).scalar() or 0
-    
-    stats.update({
-        'total_transactions': total_transactions,
-        'total_points_redeemed': abs(int(total_redeemed))
-    })
-    
-    return jsonify({'stats': stats}), 200
-
-@users_bp.route('/search', methods=['GET'])
-@jwt_required()
-def search_users():
-    """Search users by username."""
-    query = request.args.get('q', '')
-    user_type = request.args.get('type', '')
-    
-    if not query:
-        return jsonify({'error': 'Search query is required'}), 400
-    
-    users_query = User.query.filter(User.username.ilike(f'%{query}%'))
-    
-    if user_type in ['collector', 'seeker']:
-        users_query = users_query.filter_by(user_type=user_type)
-    
-    users = users_query.limit(20).all()
+        for stat in waste_stats
+    ]
     
     return jsonify({
-        'users': [user.to_dict() for user in users]
+        'total_collections': total_collections,
+        'total_weight': float(total_weight),
+        'verified_collections': verified_collections,
+        'waste_breakdown': waste_breakdown
     }), 200
