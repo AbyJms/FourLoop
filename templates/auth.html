@@ -3,14 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <title>Stranger Trash - Login / Register</title>
-
-    <!-- CSS -->
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='style.css') }}"
-    />
+    <link rel="stylesheet" href="style.css" />
   </head>
-
   <body>
     <header class="topbar">
       <div class="logo">STRANGER TRASH</div>
@@ -23,27 +17,20 @@
           <button class="auth-tab" data-view="register">Register</button>
         </div>
 
-        <div
-          id="authMessage"
-          class="auth-message"
-          role="alert"
-          aria-live="polite"
-        ></div>
-
         <!-- LOGIN PANEL -->
-        <section id="loginPanel" class="auth-panel active" aria-label="Login form">
+        <section
+          id="loginPanel"
+          class="auth-panel active"
+          aria-label="Login form"
+        >
           <h2 class="auth-title">Welcome back</h2>
-          <p class="auth-subtitle">
-            Log in to continue in STRANGER TRASH.
-          </p>
+          <p class="auth-subtitle">Log in to continue in STRANGER TRASH.</p>
 
-          <form id="authForm" class="auth-form" autocomplete="off">
+          <form class="auth-form" autocomplete="off">
             <label class="auth-field">
-              <span>Email</span>
+              <span>Username</span>
               <input
-                id="loginEmail"
-                type="email"
-                name="loginEmail"
+                id="login-username"
                 placeholder="you@example.com"
                 required
               />
@@ -52,19 +39,25 @@
             <label class="auth-field">
               <span>Password</span>
               <input
-                id="loginPassword"
+                id="login-password"
                 type="password"
-                name="loginPassword"
                 placeholder="••••••••"
                 required
               />
             </label>
 
             <div class="auth-actions">
-              <button type="submit" class="primary-btn auth-primary-btn">
+              <button
+                type="button"
+                id="loginBtn"
+                class="primary-btn auth-primary-btn"
+              >
                 Login
               </button>
-              <button type="button" class="secondary-btn auth-secondary-btn">
+              <button
+                type="button"
+                class="secondary-btn auth-secondary-btn"
+              >
                 Forgot password
               </button>
             </div>
@@ -79,28 +72,103 @@
         >
           <h2 class="auth-title">Join STRANGER TRASH</h2>
           <p class="auth-subtitle">
-            Create your account and start clearing the zone
-            <script>
-              const tabs = document.querySelectorAll('.auth-tab');
-              const loginPanel = document.getElementById('loginPanel');
-              const registerPanel = document.getElementById('registerPanel');
-            
-              tabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                  // Remove 'active' class from all tabs
-                  tabs.forEach(t => t.classList.remove('active'));
-                  // Add 'active' class to clicked tab
-                  tab.classList.add('active');
-            
-                  // Show/hide panels
-                  if (tab.dataset.view === 'login') {
-                    loginPanel.classList.add('active');
-                    registerPanel.classList.remove('active');
-                  } else {
-                    registerPanel.classList.add('active');
-                    loginPanel.classList.remove('active');
-                  }
-                });
-              });
-            </script>
-</body>             
+            Create your account and start clearing the zone.
+          </p>
+
+          <form class="auth-form" autocomplete="off">
+            <div class="auth-row">
+              <label class="auth-field">
+                <span>First name</span>
+                <input
+                  id="first-name"
+                  type="text"
+                  placeholder="Alex"
+                  required
+                />
+              </label>
+              <label class="auth-field">
+                <span>Last name</span>
+                <input
+                  id="last-name"
+                  type="text"
+                  placeholder="River"
+                  required
+                />
+              </label>
+            </div>
+
+            <label class="auth-field">
+              <span>Username</span>
+              <input
+                id="username"
+                type="text"
+                placeholder="NeonVanguard"
+                required
+              />
+            </label>
+
+            <label class="auth-field">
+              <span>Email</span>
+              <input
+                id="email"
+                type="email"
+                placeholder="you@example.com"
+                required
+              />
+            </label>
+
+            <label class="auth-field">
+              <span>Password</span>
+              <input
+                id="password"
+                type="password"
+                placeholder="Minimum 8 characters"
+                required
+              />
+            </label>
+
+            <div class="auth-actions">
+              <button
+                type="button"
+                id="registerBtn"
+                class="primary-btn auth-primary-btn"
+              >
+                Register
+              </button>
+            </div>
+          </form>
+        </section>
+      </section>
+    </main>
+
+    <script>
+      // Toggle between login and register panels
+      (function () {
+        var tabs = document.querySelectorAll(".auth-tab");
+        var login = document.getElementById("loginPanel");
+        var register = document.getElementById("registerPanel");
+
+        tabs.forEach(function (tab) {
+          tab.addEventListener("click", function () {
+            var view = this.getAttribute("data-view");
+
+            tabs.forEach(function (t) {
+              t.classList.remove("active");
+            });
+            this.classList.add("active");
+
+            if (view === "login") {
+              login.classList.add("active");
+              register.classList.remove("active");
+            } else {
+              register.classList.add("active");
+              login.classList.remove("active");
+            }
+          });
+        });
+      })();
+    </script>
+
+    <script src="auth.js"></script>
+  </body>
+</html>             
