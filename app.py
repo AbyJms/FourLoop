@@ -97,6 +97,31 @@ def create_app():
                 "nextMilestone": "Legendary Badge"
             }
         })
+from flask import render_template
+
+@app.route("/")
+def home():
+    return render_template("auth.html")  # login/register page
+
+@app.route("/dashboard-page")
+@login_required
+def dashboard_page():
+    return render_template("dashboard.html")
+
+@app.route("/profile-page")
+@login_required
+def profile_page():
+    return render_template("profile.html")
+
+@app.route("/mission-page")
+@login_required
+def mission_page():
+    return render_template("mission.html")
+
+@app.route("/store-page")
+@login_required
+def store_page():
+    return render_template("store.html")
 
     return app
 
