@@ -1,6 +1,6 @@
 // Frontend auth wiring: handles login/register form submissions to Flask backend.
 (function () {
-  const loginForm = document.getElementById("authForm");
+  const loginForm = document.getElementById("loginForm");
   const registerForm = document.getElementById("registerForm");
   const messageBox = document.getElementById("authMessage");
   const tabs = document.querySelectorAll(".auth-tab");
@@ -19,7 +19,7 @@
     const res = await fetch(`${API_BASE}${path}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      credentials: "include", // keep session cookie
+      credentials: "include",
       body: JSON.stringify(body),
     });
     const data = await res.json().catch(() => ({}));
@@ -35,10 +35,12 @@
       e.preventDefault();
       const email = document.getElementById("loginEmail")?.value.trim();
       const password = document.getElementById("loginPassword")?.value;
+
       if (!email || !password) {
         setMessage("Email and password are required", "error");
         return;
       }
+
       setMessage("Logging in...", "info");
       try {
         await postJSON("/login", { email, password });
@@ -51,24 +53,30 @@
   }
 
   // Register submit
-  <!-- HTML -->
-<div class="auth-tabs">
-  <button class="auth-tab active" data-view="login">Login</button>
-  <button class="auth-tab" data-view="register">Register</button>
-</div>
+  if (registerForm) {
+    registerForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
 
-<div id="loginPanel" class="auth-panel active">
-  <form id="loginForm">
-    <input type="email" id="loginEmail" placeholder="Email" required>
-    <input type="password" id="loginPassword" placeholder="Password" required>
-    <button type="submit">Login</button>
-  </form>
-</div>
+      const email = registerForm.querySelector('input[name="registerEmail"]')?.value.trim();
+      const password = registerForm.querySelector('input[name="registerPassword"]')?.value;
 
-<div id="registerPanel" class="auth-panel">
-  <form id="registerForm">
-    <input type="email" name="registerEmail" placeholder="Email" required>
-    <input type="password" name="registerPassword" placeholder="Password" required>
-    <button type="submit">Register</button>
-  </form>
-</div>
+      if (!email || !password) {
+        setMessage("Email and password are required", "error");
+        return;
+      }
+
+      setMessage("Registering...", "info");
+
+      try {
+        await postJSON("/register", { email, password });
+        setMessage("Registration successful. You can now log in.", "success");
+
+        setTimeout(() => {
+          document.querySelector('[data-view="login"]').click();
+        }, 500);
+      } catch (err) {
+        setMessage(err.message, "error");
+      }
+    });
+  }
+})();
