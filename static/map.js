@@ -206,13 +206,13 @@ document.addEventListener("DOMContentLoaded", () => {
       .bindPopup("You are here");
   };
 
-  // Fixed Demogorgan icon (large, no outline, cannot be moved by players)
+  // Fixed demogarbage icon (large, no outline, cannot be moved by players)
   const demoGarbageIcon = L.icon({
     iconUrl: "demogarbage.jpeg",
     iconSize: [72, 72],
     iconAnchor: [36, 36],
     popupAnchor: [0, -36],
-    className: "demogorgan-icon"
+    className: "demogarbage-icon"
   });
 
   // Default fallback view
@@ -224,25 +224,38 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
 
-  // Fixed Demogorgan spawn locations (preloaded, not user-editable, spread out)
-  const demogorganLocations = [
+  // Fixed demogarbage spawn locations (preloaded, not user-editable, spread out)
+  const demogarbageLocations = [
     [10.5400, 76.2200],
     [10.5200, 76.2050],
     [10.3500, 76.2785]
   ];
 
-  window.demogorganHp = 100;
-  window.demogorganMarkers = demogorganLocations.map((coords) =>
-    L.marker(coords, { icon: demoGarbageIcon })
+  window.demogarbageHp = 100;
+  window.demogarbageMarkers = demogarbageLocations.map((coords) => {
+    // 🔴 Pulsating danger radius
+    L.circle(coords, {
+      radius: 250,
+      color: "rgba(255, 80, 80, 0.6)",
+      fillColor: "rgba(255, 80, 80, 0.25)",
+      fillOpacity: 0.4,
+      weight: 2,
+      interactive: false,
+      className: "danger-pulse"
+    }).addTo(window.zoneMapInstance);
+
+    // 👹 Demogarbage icon (on top)
+    return L.marker(coords, { icon: demoGarbageIcon })
       .addTo(window.zoneMapInstance)
-      .bindPopup("Demogorgan")
-  );
+      .bindPopup("Demogarbage");
+  });
+
 
   // Only game logic can change/remove these – e.g., when HP hits 0
-  window.setDemogorganHp = (hp) => {
-    window.demogorganHp = hp;
-    if (hp <= 0 && window.demogorganMarkers) {
-      window.demogorganMarkers.forEach((m) => {
+  window.setdemogarbageHp = (hp) => {
+    window.demogarbageHp = hp;
+    if (hp <= 0 && window.demogarbageMarkers) {
+      window.demogarbageMarkers.forEach((m) => {
         try {
           window.zoneMapInstance.removeLayer(m);
         } catch (e) {
