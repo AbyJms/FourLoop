@@ -46,16 +46,16 @@ class WasteRequest(db.Model):
 
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     class WasteViolation(db.Model):
-    __tablename__ = "waste_violations"
+        __tablename__ = "waste_violations"
 
-    id = db.Column(db.Integer, primary_key=True)
+        id = db.Column(db.Integer, primary_key=True)
 
-    home_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    request_id = db.Column(db.Integer, db.ForeignKey("waste_requests.id"))
+        home_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+        request_id = db.Column(db.Integer, db.ForeignKey("waste_requests.id"))
 
-    reason = db.Column(db.String(255), nullable=False)
+        reason = db.Column(db.String(255), nullable=False)
 
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+        created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 
 
