@@ -35,81 +35,31 @@ def create_app():
 
     # ---------------- API ROUTES ----------------
 
-    @app.route("/register", methods=["POST"])
-    def register():
-        data = request.json
-        if User.query.filter_by(username=data["username"]).first():
-            return jsonify({"error": "User already exists"}), 400
+   @app.route("/register", methods=["POST"])
+def register():
+    data = request.json
+    if User.query.filter_by(email=data["email"]).first():
+        return jsonify({"error": "User already exists"}), 400
 
-        user = User(
-            email=data["email"],
-            role=data.get("role", "player"),
-        )
-        user.password_hash = generate_password_hash(data["password"])
+    user = User(
+        email=data["email"],
+        role=data.get("role", "player"),
+    )
+    from werkzeug.security import generate_password_hash
+    user.password_hash = generate_password_hash(data["password"])
 
-        db.session.add(user)
-        db.session.commit()
-        return jsonify({"message": "User registered"}), 201
+    db.session.add(user)
+    db.session.commit()
+    return jsonify({"message": "User registered"}), 201
 
-    @app.route("/login", methods=["POST"])
-    def login():
-        data = request.json
-        user = User.query.filter_by(username=data["username"]).first()
 
-        if not user or not check_password_hash(
-            user.password_hash, data["password"]
-        ):
-            return jsonify({"error": "Invalid credentials"}), 401
+@app.route("/login", methods=["POST"])
+def login():
+    data = request.json
+    user = User.query.filter_by(email=data["email"]).first()
 
-        login_user(user)
-        return jsonify({"message": "Login successful"}), 200
+    if not user or not check_password_hash(user.password_hash, data["password"]):
+        return jsonify({"error": "Invalid credentials"}), 401
 
-    @app.route("/logout", methods=["POST"])
-    @login_required
-    def logout():
-        logout_user()
-        return jsonify({"message": "Logged out"}), 200
-
-    # ---------------- PAGE ROUTES ----------------
-
-    @app.route("/")
-    def login_page():
-        return render_template("auth.html")
-
-    @app.route("/dashboard")
-    @login_required
-    def dashboard_page():
-        return render_template("dashboard.html")
-
-    @app.route("/seeker")
-    @login_required
-    def seeker_dashboard():
-        return render_template("seeker-dashboard.html")
-
-    @app.route("/seeker/post")
-    @login_required
-    def seeker_post():
-        return render_template("seeker-post.html")
-
-    @app.route("/mission")
-    @login_required
-    def mission_page():
-        return render_template("mission.html")
-
-    @app.route("/profile")
-    @login_required
-    def profile_page():
-        return render_template("profile.html")
-
-    @app.route("/store")
-    @login_required
-    def store_page():
-        return render_template("store.html")
-
-    return app
-
-if __name__ == "__main__":
-    app = create_app()
-    with app.app_context():
-        db.create_all()
-    app.run(debug=True)
+    login_user(user)
+    return jsonify({"message": "Login successful"}), 200
