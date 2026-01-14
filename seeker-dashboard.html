@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Stranger Trash – Seeker Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<header class="topbar">
+  <div class="logo">STRANGER TRASH <span class="role-tag">SEEKER</span></div>
+  <button class="logout">Logout</button>
+</header>
+
+<main class="main-layout">
+
+  <nav class="tabs">
+    <a class="tab-button active" href="#">Dashboard</a>
+    <a class="tab-button" href="#">Post Jobs</a>
+    <a class="tab-button" href="#">Verifications</a>
+    <a class="tab-button" href="#">Zone Stats</a>
+  </nav>
+
+  <section class="dashboard-grid seeker-grid">
+
+    <!-- LEFT COLUMN -->
+    <div class="dashboard-left">
+
+      <!-- ACTIVE JOBS -->
+      <section class="card spacious">
+        <h3>Active Community Jobs</h3>
+        <ul class="seeker-list">
+          <li>Plastic hotspot cleanup – Ward 12 <span class="status live">LIVE</span></li>
+          <li>Drain clearing operation <span class="status live">LIVE</span></li>
+          <li>Recycling survey drive <span class="status paused">PAUSED</span></li>
+        </ul>
+
+        <div class="card-actions">
+          <button class="primary-btn">Post New Job</button>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div class="dashboard-right">
+
+      <!-- QUICK ACTIONS -->
+      <section class="card spacious">
+        <h3>Quick Actions</h3>
+        <div class="action-grid">
+          <button class="secondary-btn">Create Main Job</button>
+          <button class="secondary-btn">Pause Job</button>
+        </div>
+      </section>
+
+      <!-- VERIFICATIONS -->
+      <section class="card spacious">
+        <h3>Pending Verifications</h3>
+        <ul class="verify-list">
+          <li>Side quest: Illegal dump report <span class="status pending">PENDING</span></li>
+          <li>Cleanup photo – MG Road <span class="status pending">PENDING</span></li>
+          <li>Recycling proof upload <span class="status approved">APPROVED</span></li>
+        </ul>
+
+        <div class="card-actions">
+          <button class="leaderboard">Review Verifications</button>
+        </div>
+      </section>
+
+    </div>
+
+  </section>
+
+</main>
+
+</body>
+</html>
