@@ -52,7 +52,7 @@ body {
   padding: 40px;
   text-align: center;
   margin-bottom: 30px;
-  box-shadow: 0 0 30px rgba(255, 0, 0, 0.2);
+  box-shadow: 0 0 30px rgba(255,0,0,0.2);
 }
 
 .label {
@@ -77,7 +77,7 @@ body {
   border: 1px solid #ff0000;
   border-radius: 16px;
   padding: 20px;
-  background: rgba(10, 10, 30, 0.6);
+  background: rgba(10,10,30,0.6);
 }
 
 .card h3 {
@@ -133,7 +133,7 @@ body {
   color: #ff0000;
   padding: 10px 30px;
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(255, 0, 0, 0.4);
+  box-shadow: 0 0 10px rgba(255,0,0,0.4);
 }
 
 /* ---- Extended dashboard layout ---- */
@@ -239,17 +239,10 @@ body {
 
 .map-overlay {
   position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    radial-gradient(circle at center, rgba(255, 0, 0, 0.08), transparent 70%),
-    repeating-linear-gradient(0deg,
-      rgba(255, 255, 255, 0.02),
-      rgba(255, 255, 255, 0.02) 1px,
-      transparent 1px,
-      transparent 3px);
-  mix-blend-mode: screen;
-  z-index: 400;
+  bottom: 12px;
+  left: 16px;
+  font-size: 12px;
+  opacity: 0.6;
 }
 
 .map-legend {
@@ -383,15 +376,12 @@ body {
 
 /* Mission card typography */
 .mission-title {
-  font-size: 14px;
-  /* match "Active Main Quests" */
-  color: #ff6666;
-  /* match "Queen of Plastics" */
+  font-size: 14px; /* match "Active Main Quests" */
+  color: #ff6666; /* match "Queen of Plastics" */
 }
 
 .mission-text {
-  font-size: 13px;
-  /* match quest list items */
+  font-size: 13px; /* match quest list items */
 }
 
 .primary-btn {
@@ -977,8 +967,7 @@ body {
   border: 2px solid #ff0000;
   box-shadow: 0 0 18px rgba(255, 0, 0, 0.5);
 
-  flex-shrink: 0;
-  /* IMPORTANT */
+  flex-shrink: 0;   /* IMPORTANT */
 }
 
 .user-map-icon {
@@ -1031,3 +1020,82 @@ body {
   opacity: 0.8;
   margin-left: 6px;
 }
+
+/* =========================
+   Seeker Post Form Styling
+========================= */
+
+.seeker-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 14px;
+}
+
+.seeker-field input,
+.seeker-field textarea,
+.seeker-field select {
+  background: rgba(5, 5, 15, 0.9);
+  border: 1px solid rgba(255, 0, 0, 0.4);
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: #fff;
+  outline: none;
+}
+
+.seeker-field textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.seeker-field input:focus,
+.seeker-field textarea:focus,
+.seeker-field select:focus {
+  border-color: #ff0000;
+  box-shadow: 0 0 12px rgba(255, 0, 0, 0.6);
+}
+
+.seeker-field input[readonly] {
+  opacity: 0.7;
+}
+
+.auth-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+}
+
+.auth-form-field span {
+  opacity: 0.8;
+}
+
+.auth-form-field input {
+  background: rgba(5, 5, 15, 0.9);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 0, 0, 0.4);
+  padding: 8px 10px;
+  color: #fff;
+  outline: none;
+}
+
+.auth-form-field input:focus {
+  border-color: #ff0000;
+  box-shadow: 0 0 12px rgba(255, 0, 0, 0.6);
+}
+
+.auth-form-field textarea {
+  background: rgba(5, 5, 15, 0.9);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 0, 0, 0.4);
+  padding: 8px 10px;
+  color: #fff;
+  outline: none;
+  resize: vertical;
+}
+
+.auth-form-field textarea:focus {
+  border-color: #ff0000;
+  box-shadow: 0 0 12px rgba(255, 0, 0, 0.6);
+}
+
