@@ -980,4 +980,47 @@ body {
   background-color: #000;
 }
 
->>>>>>> d2fc4df4fcc20712968c3379e7e4d862c81b09b3
+/* --- Seeker Dashboard Spacing Fix --- */
+
+.seeker-grid {
+  gap: 40px;
+}
+
+.card.spacious {
+  padding: 28px 32px;
+  margin-bottom: 28px;
+}
+
+.card h3 {
+  margin-bottom: 18px;
+}
+
+.seeker-list li,
+.verify-list li {
+  margin-bottom: 14px;
+  line-height: 1.6;
+}
+
+.card-actions {
+  margin-top: 22px;
+}
+
+.action-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+.dashboard-left,
+.dashboard-right {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.role-tag {
+  font-size: 14px;
+  opacity: 0.8;
+  margin-left: 6px;
+}
+
