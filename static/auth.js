@@ -7,6 +7,26 @@
   const loginPanel = document.getElementById("loginPanel");
   const registerPanel = document.getElementById("registerPanel");
 
+    // Tab switching
+    tabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        tabs.forEach(t => t.classList.remove("active"));
+        tab.classList.add("active");
+  
+        const view = tab.dataset.view;
+  
+        if (view === "login") {
+          loginPanel.classList.add("active");
+          registerPanel.classList.remove("active");
+          setMessage("");
+        } else {
+          registerPanel.classList.add("active");
+          loginPanel.classList.remove("active");
+          setMessage("");
+        }
+      });
+    });
+  
   const API_BASE = ""; // same-origin; change to "http://127.0.0.1:5000" if serving HTML from file://
 
   function setMessage(text, type = "info") {
