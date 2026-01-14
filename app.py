@@ -36,30 +36,30 @@ def create_app():
     # ---------------- API ROUTES ----------------
 
    @app.route("/register", methods=["POST"])
-def register():
-    data = request.json
-    if User.query.filter_by(email=data["email"]).first():
-        return jsonify({"error": "User already exists"}), 400
+        def register():
+            data = request.json
+            if User.query.filter_by(email=data["email"]).first():
+                return jsonify({"error": "User already exists"}), 400
 
-    user = User(
-        email=data["email"],
-        role=data.get("role", "player"),
-    )
-    from werkzeug.security import generate_password_hash
-    user.password_hash = generate_password_hash(data["password"])
+            user = User(
+                email=data["email"],
+                role=data.get("role", "player"),
+            )
+            from werkzeug.security import generate_password_hash
+            user.password_hash = generate_password_hash(data["password"])
 
-    db.session.add(user)
-    db.session.commit()
-    return jsonify({"message": "User registered"}), 201
+            db.session.add(user)
+            db.session.commit()
+            return jsonify({"message": "User registered"}), 201
 
 
-@app.route("/login", methods=["POST"])
-def login():
-    data = request.json
-    user = User.query.filter_by(email=data["email"]).first()
+        @app.route("/login", methods=["POST"])
+        def login():
+            data = request.json
+            user = User.query.filter_by(email=data["email"]).first()
 
-    if not user or not check_password_hash(user.password_hash, data["password"]):
-        return jsonify({"error": "Invalid credentials"}), 401
+            if not user or not check_password_hash(user.password_hash, data["password"]):
+                return jsonify({"error": "Invalid credentials"}), 401
 
-    login_user(user)
-    return jsonify({"message": "Login successful"}), 200
+            login_user(user)
+            return jsonify({"message": "Login successful"}), 200
