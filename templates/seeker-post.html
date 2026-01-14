@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Stranger Trash – Post Job</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
 </head>
 <body>
 
@@ -15,9 +15,9 @@
 <main class="main-layout">
 
   <nav class="tabs">
-    <a class="tab-button" href="seeker-dashboard.html">Dashboard</a>
-    <a class="tab-button active" href="seeker-post.html">Post Jobs</a>
-    <a class="tab-button" href="seeker-job.html">Active Jobs</a>
+    <a class="tab-button" href="/seeker/dashboard">Dashboard</a>
+    <a class="tab-button active" href="/seeker/post">Post Jobs</a>
+    <a class="tab-button" href="/seeker/jobs">Active Jobs</a>
   </nav>
 
   <section class="card spacious post-job-card">
@@ -27,93 +27,3 @@
     <form class="auth-form" autocomplete="off">
 
       <!-- JOB BASICS -->
-      <section class="form-section">
-        <h3>Job Basics</h3>
-
-        <div class="form-grid two-col">
-          <label class="auth-field">
-            <span>Job Title</span>
-            <input type="text" placeholder="e.g. Plastic hotspot cleanup">
-          </label>
-
-          <label class="auth-field">
-          </label>
-        </div>
-
-        <label class="auth-form-field">
-          <span>Short Description</span>
-          <textarea rows="3" placeholder="Brief description of the task"></textarea>
-        </label>
-      </section>
-
-      <!-- LOCATION -->
-      <section class="form-section">
-        <h3>Location</h3>
-
-        <div class="map-placeholder large">
-          CLICK TO DROP PIN
-        </div>
-
-        <label class="auth-field full">
-          <span>Auto-detected Location</span>
-          <input type="text" value="MG Road, City Center" readonly>
-        </label>
-      </section>
-
-      <!-- JOB REQUIREMENTS -->
-      <section class="form-section">
-        <h3>Job Requirements</h3>
-
-        <div class="form-grid two-col">
-          <label class="auth-field">
-            <span>Number of People Needed</span>
-            <input type="text" inputmode="numeric" pattern="[0-9]*" placeholder="e.g. 10">
-          </label>
-
-          <label class="auth-field">
-            <span>Estimated Duration (hours)</span>
-            <input type="text" inputmode="numeric" pattern="[0-9]*" placeholder="e.g. 3">
-          </label>
-        </div>
-      </section>
-
-      <!-- REWARDS -->
-      <section class="form-section">
-        <h3>Rewards</h3>
-
-        <label class="auth-field full">
-          <span>Tokens Awarded</span>
-          <input type="text" inputmode="numeric" pattern="[0-9]*" placeholder="e.g. 25">
-        </label>
-      </section>
-
-      <!-- TIME WINDOW -->
-      <section class="form-section">
-        <h3>Time Window</h3>
-
-        <div class="form-grid two-col">
-          <label class="auth-field">
-            <span>Start Date & Time</span>
-            <input type="datetime-local">
-          </label>
-
-          <label class="auth-field">
-            <span>End Date & Time</span>
-            <input type="datetime-local">
-          </label>
-        </div>
-      </section>
-
-      <!-- ACTIONS -->
-      <div class="form-actions">
-        <button type="button" class="primary-btn">Publish Job</button>
-      </div>
-
-    </form>
-
-  </section>
-
-</main>
-
-</body>
-</html>
