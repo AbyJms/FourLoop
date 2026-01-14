@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <title>Stranger Trash - Login / Register</title>
 
+    <!-- CSS -->
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='style.css') }}"
@@ -36,12 +37,13 @@
             Log in to continue in STRANGER TRASH.
           </p>
 
-          <form id="loginForm" class="auth-form" autocomplete="off">
+          <form id="authForm" class="auth-form" autocomplete="off">
             <label class="auth-field">
               <span>Email</span>
               <input
                 id="loginEmail"
                 type="email"
+                name="loginEmail"
                 placeholder="you@example.com"
                 required
               />
@@ -52,6 +54,7 @@
               <input
                 id="loginPassword"
                 type="password"
+                name="loginPassword"
                 placeholder="••••••••"
                 required
               />
@@ -60,3 +63,44 @@
             <div class="auth-actions">
               <button type="submit" class="primary-btn auth-primary-btn">
                 Login
+              </button>
+              <button type="button" class="secondary-btn auth-secondary-btn">
+                Forgot password
+              </button>
+            </div>
+          </form>
+        </section>
+
+        <!-- REGISTER PANEL -->
+        <section
+          id="registerPanel"
+          class="auth-panel"
+          aria-label="Register form"
+        >
+          <h2 class="auth-title">Join STRANGER TRASH</h2>
+          <p class="auth-subtitle">
+            Create your account and start clearing the zone
+            <script>
+              const tabs = document.querySelectorAll('.auth-tab');
+              const loginPanel = document.getElementById('loginPanel');
+              const registerPanel = document.getElementById('registerPanel');
+            
+              tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                  // Remove 'active' class from all tabs
+                  tabs.forEach(t => t.classList.remove('active'));
+                  // Add 'active' class to clicked tab
+                  tab.classList.add('active');
+            
+                  // Show/hide panels
+                  if (tab.dataset.view === 'login') {
+                    loginPanel.classList.add('active');
+                    registerPanel.classList.remove('active');
+                  } else {
+                    registerPanel.classList.add('active');
+                    loginPanel.classList.remove('active');
+                  }
+                });
+              });
+            </script>
+</body>             
