@@ -52,7 +52,7 @@ body {
   padding: 40px;
   text-align: center;
   margin-bottom: 30px;
-  box-shadow: 0 0 30px rgba(255,0,0,0.2);
+  box-shadow: 0 0 30px rgba(255, 0, 0, 0.2);
 }
 
 .label {
@@ -77,7 +77,7 @@ body {
   border: 1px solid #ff0000;
   border-radius: 16px;
   padding: 20px;
-  background: rgba(10,10,30,0.6);
+  background: rgba(10, 10, 30, 0.6);
 }
 
 .card h3 {
@@ -133,7 +133,7 @@ body {
   color: #ff0000;
   padding: 10px 30px;
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(255,0,0,0.4);
+  box-shadow: 0 0 10px rgba(255, 0, 0, 0.4);
 }
 
 /* ---- Extended dashboard layout ---- */
@@ -239,10 +239,17 @@ body {
 
 .map-overlay {
   position: absolute;
-  bottom: 12px;
-  left: 16px;
-  font-size: 12px;
-  opacity: 0.6;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at center, rgba(255, 0, 0, 0.08), transparent 70%),
+    repeating-linear-gradient(0deg,
+      rgba(255, 255, 255, 0.02),
+      rgba(255, 255, 255, 0.02) 1px,
+      transparent 1px,
+      transparent 3px);
+  mix-blend-mode: screen;
+  z-index: 400;
 }
 
 .map-legend {
@@ -376,12 +383,15 @@ body {
 
 /* Mission card typography */
 .mission-title {
-  font-size: 14px; /* match "Active Main Quests" */
-  color: #ff6666; /* match "Queen of Plastics" */
+  font-size: 14px;
+  /* match "Active Main Quests" */
+  color: #ff6666;
+  /* match "Queen of Plastics" */
 }
 
 .mission-text {
-  font-size: 13px; /* match quest list items */
+  font-size: 13px;
+  /* match quest list items */
 }
 
 .primary-btn {
@@ -941,9 +951,6 @@ body {
 /* Fix Leaflet background for dark UI */
 .leaflet-container {
   background: #05050a;
-<<<<<<< HEAD
-}
-=======
 }
 
 /* REQUIRED for Leaflet to render tiles */
@@ -970,7 +977,8 @@ body {
   border: 2px solid #ff0000;
   box-shadow: 0 0 18px rgba(255, 0, 0, 0.5);
 
-  flex-shrink: 0;   /* IMPORTANT */
+  flex-shrink: 0;
+  /* IMPORTANT */
 }
 
 .user-map-icon {
@@ -979,5 +987,3 @@ body {
   box-shadow: 0 0 12px rgba(255, 0, 0, 0.7);
   background-color: #000;
 }
-
->>>>>>> d2fc4df4fcc20712968c3379e7e4d862c81b09b3

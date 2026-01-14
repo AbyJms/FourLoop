@@ -108,9 +108,13 @@ document.addEventListener("DOMContentLoaded", () => {
     attributionControl: false
   });
 
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    maxZoom: 19
-  }).addTo(window.zoneMapInstance);
+  L.tileLayer(
+    'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+    {
+      attribution: '&copy; OpenStreetMap contributors',
+      maxZoom: 19
+    }
+  ).addTo(window.zoneMapInstance);
 
   // Default fallback view
   window.zoneMapInstance.setView([10.5276, 76.2144], 14);
@@ -124,21 +128,21 @@ document.addEventListener("DOMContentLoaded", () => {
       window.zoneMapInstance.setView([lat, lng], 15);
 
       const userIcon = L.icon({
-  iconUrl: "you.jpg",
-  iconSize: [36, 36],      // size of image
-  iconAnchor: [18, 18],   // center the icon
-  popupAnchor: [0, -18],  // popup position
-  className: "user-map-icon"
-});
+        iconUrl: "you.jpg",
+        iconSize: [36, 36],      // size of image
+        iconAnchor: [18, 18],   // center the icon
+        popupAnchor: [0, -18],  // popup position
+        className: "user-map-icon"
+      });
 
-L.marker([lat, lng], {
-  icon: userIcon
-})
-.addTo(window.zoneMapInstance)
-.bindPopup("You are here");
+      L.marker([lat, lng], {
+        icon: userIcon
+      })
+        .addTo(window.zoneMapInstance)
+        .bindPopup("You are here");
 
     },
-    () => {}
+    () => { }
   );
 
   // Demo quest markers
