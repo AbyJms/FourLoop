@@ -13,14 +13,15 @@ body {
 
 .topbar {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   margin-bottom: 30px;
+  position: relative;
 }
 
 .logo {
   color: #ff0000;
-  font-size: 24px;
+  font-size: 30px;
   font-weight: bold;
   text-shadow: 0 0 10px #ff0000;
 }
@@ -41,6 +42,8 @@ body {
   color: #ff0000;
   padding: 6px 14px;
   border-radius: 6px;
+  position: absolute;
+  right: 0;
 }
 
 .timer-card {
@@ -153,6 +156,10 @@ body {
   border: 1px solid rgba(255, 0, 0, 0.5);
   color: #ff6666;
   border-radius: 999px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   text-transform: uppercase;
   font-size: 12px;
   letter-spacing: 1px;
@@ -365,6 +372,16 @@ body {
   margin-left: 16px;
   font-size: 13px;
   opacity: 0.9;
+}
+
+/* Mission card typography */
+.mission-title {
+  font-size: 14px; /* match "Active Main Quests" */
+  color: #ff6666; /* match "Queen of Plastics" */
+}
+
+.mission-text {
+  font-size: 13px; /* match quest list items */
 }
 
 .primary-btn {
@@ -602,6 +619,207 @@ body {
   background: rgba(255, 0, 0, 0.08);
 }
 
+/* ---- Store / Redeem tab ---- */
+
+.store-header-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.store-header-main h2 {
+  margin-bottom: 4px;
+}
+
+.store-subtitle {
+  font-size: 13px;
+  opacity: 0.7;
+}
+
+.store-balance {
+  text-align: right;
+}
+
+.store-balance-label {
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.store-balance-value {
+  font-size: 20px;
+  color: #ff6666;
+}
+
+.store-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.store-card h3 {
+  margin-bottom: 6px;
+  font-size: 15px;
+}
+
+.store-desc {
+  font-size: 13px;
+  opacity: 0.85;
+  margin-bottom: 10px;
+}
+
+.store-meta {
+  font-size: 12px;
+  opacity: 0.85;
+  margin-bottom: 10px;
+}
+
+.store-meta .highlight {
+  color: #ff6666;
+}
+
+.store-owned-row,
+.store-status-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+
+.store-owned-count {
+  font-family: monospace;
+}
+
+.store-status {
+  color: #ffcc33;
+}
+
+.store-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.store-actions .primary-btn[disabled] {
+  opacity: 0.4;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+/* ---- Auth (Login / Register) ---- */
+
+.auth-layout {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 120px);
+}
+
+.auth-card {
+  max-width: 600px;
+  width: 100%;
+}
+
+.auth-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.auth-tab {
+  flex: 1;
+  padding: 8px 0;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 0, 0, 0.6);
+  background: transparent;
+  color: #ff9999;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 1px;
+  cursor: pointer;
+}
+
+.auth-tab.active {
+  background: rgba(255, 0, 0, 0.2);
+  color: #fff;
+  box-shadow: 0 0 16px rgba(255, 0, 0, 0.6);
+}
+
+.auth-panel {
+  display: none;
+}
+
+.auth-panel.active {
+  display: block;
+}
+
+.auth-title {
+  margin-bottom: 4px;
+}
+
+.auth-subtitle {
+  font-size: 13px;
+  opacity: 0.7;
+  margin-bottom: 16px;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.auth-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+}
+
+.auth-field span {
+  opacity: 0.8;
+}
+
+.auth-field input {
+  background: rgba(5, 5, 15, 0.9);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 0, 0, 0.4);
+  padding: 8px 10px;
+  color: #fff;
+  outline: none;
+}
+
+.auth-field input:focus {
+  border-color: #ff0000;
+  box-shadow: 0 0 12px rgba(255, 0, 0, 0.6);
+}
+
+.auth-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.auth-primary-btn {
+  flex: 1;
+  justify-content: center;
+}
+
+.auth-secondary-btn {
+  font-size: 11px;
+  padding: 6px 10px;
+}
+
+.auth-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
 /* ---- Responsive tweaks ---- */
 @media (max-width: 960px) {
   .dashboard-grid {
@@ -613,6 +831,10 @@ body {
   }
 
   .profile-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .store-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
@@ -644,6 +866,10 @@ body {
 
   .tabs {
     overflow-x: auto;
+  }
+
+  .store-grid {
+    grid-template-columns: 1fr;
   }
 }
 
