@@ -1,4 +1,23 @@
-console.log("CareerForge loaded");
+function updateLocationName(lat, lng) {
+  fetch(
+    `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`
+  )
+    .then(res => res.json())
+    .then(data => {
+      const place =
+        data.address.suburb ||
+        data.address.neighbourhood ||
+        data.address.city ||
+        data.address.town ||
+        "Your Area";
+
+      document.getElementById("currentLocation").textContent = place;
+    })
+    .catch(() => {
+      document.getElementById("currentLocation").textContent = "Your Area";
+    });
+}
+
 
 // ================= FORM VALIDATION =================
 
@@ -187,24 +206,30 @@ document.addEventListener("DOMContentLoaded", () => {
     fullscreenBtn.addEventListener("click", toggleFullscreen);
   }
 
-  // Helper to add the user marker and center map
-  const addUserLocation = (lat, lng) => {
+  const locationEl = document.getElementById("currentLocation");
+
+  getUserLocationOnce((lat, lng) => {
+    // Center map
     window.zoneMapInstance.setView([lat, lng], 15);
 
+    // User marker
     const userIcon = L.icon({
       iconUrl: "you.jpg",
-      iconSize: [36, 36], // size of image
-      iconAnchor: [18, 18], // center the icon
-      popupAnchor: [0, -18], // popup position
+      iconSize: [36, 36],
+      iconAnchor: [18, 18],
+      popupAnchor: [0, -18],
       className: "user-map-icon"
     });
 
-    L.marker([lat, lng], {
-      icon: userIcon
-    })
+    L.marker([lat, lng], { icon: userIcon })
       .addTo(window.zoneMapInstance)
       .bindPopup("You are here");
-  };
+
+    // 🔥 UPDATE UI TEXT (THIS WAS NEVER RUNNING BEFORE)
+    if (locationEl) {
+      locationEl.textContent = "Location locked";
+    }
+  });
 
   // Fixed demogarbage icon (large, no outline, cannot be moved by players)
   const demoGarbageIcon = L.icon({
@@ -218,24 +243,38 @@ document.addEventListener("DOMContentLoaded", () => {
   // Default fallback view
   window.zoneMapInstance.setView([10.5276, 76.2144], 14);
 
-  // Try cached location first (so we don't prompt again in this session)
-  getUserLocationOnce((lat, lng) => {
-    addUserLocation(lat, lng);
-  });
 
 
   // Fixed demogarbage spawn locations (preloaded, not user-editable, spread out)
-  const demogarbageLocations = [
-    [10.5400, 76.2200],
-    [10.5200, 76.2050],
-    [10.3500, 76.2785]
-  ];
 
   window.demogarbageHp = 100;
-  window.demogarbageMarkers = demogarbageLocations.map((coords) => {
-    // 🔴 Pulsating danger radius
-    L.circle(coords, {
-      radius: 250,
+  const demogarbageBosses = [
+    {
+      id: "demo_1",
+      name: "Demo-garbage",
+      zone: "Crimson Wastefront",
+      cycle: "Nightfall Raid",
+      hpPercent: 42,
+      timeRemaining: "23:12:55",
+      coords: [10.350078, 76.248586],
+      contributions: []
+    },
+    {
+      id: "demo_2",
+      name: "Demo-garbage (East)",
+      zone: "Crimson Wastefront",
+      cycle: "Nightfall Raid",
+      hpPercent: 68,
+      timeRemaining: "18:04:10",
+      coords: [10.350078, 76.278586],
+      contributions: []
+    }
+  ];
+
+  window.demogarbageMarkers = demogarbageBosses.map((boss) => {
+    // danger radius
+    L.circle(boss.coords, {
+      radius: 400,
       color: "rgba(255, 80, 80, 0.6)",
       fillColor: "rgba(255, 80, 80, 0.25)",
       fillOpacity: 0.4,
@@ -244,11 +283,16 @@ document.addEventListener("DOMContentLoaded", () => {
       className: "danger-pulse"
     }).addTo(window.zoneMapInstance);
 
-    // 👹 Demogarbage icon (on top)
-    return L.marker(coords, { icon: demoGarbageIcon })
+    const marker = L.marker(boss.coords, { icon: demoGarbageIcon })
       .addTo(window.zoneMapInstance)
-      .bindPopup("Demogarbage");
+      .bindPopup(boss.name);
+
+    // 🔥 click → update UI
+    marker.on("click", () => updateBossPanel(boss));
+
+    return marker;
   });
+
 
 
   // Only game logic can change/remove these – e.g., when HP hits 0
@@ -293,3 +337,46 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 });
+
+function updateBossPanel(boss) {
+  document.querySelector(".boss-name").textContent = boss.name;
+
+  const metaSpans = document.querySelectorAll(".boss-meta span");
+  metaSpans[0].textContent = boss.zone;
+  metaSpans[1].textContent = boss.cycle;
+
+  document.querySelector(".hp-bar-label span:last-child").textContent =
+    `${boss.hpPercent}% remaining`;
+
+  document.querySelector(".hp-bar-inner").style.width =
+    `${boss.hpPercent}%`;
+
+  document.querySelector(".cycle-time").textContent =
+    boss.timeRemaining;
+}
+
+
+getUserLocationOnce((lat, lng) => {
+  // center the map
+  window.zoneMapInstance.setView([lat, lng], 15);
+
+  // add user marker
+  const userIcon = L.icon({
+    iconUrl: "you.jpg",
+    iconSize: [36, 36],
+    iconAnchor: [18, 18],
+    popupAnchor: [0, -18],
+    className: "user-map-icon"
+  });
+
+  L.marker([lat, lng], { icon: userIcon })
+    .addTo(window.zoneMapInstance)
+    .bindPopup("You are here");
+
+  // update text
+  const el = document.getElementById("currentLocation");
+  if (el) {
+    el.textContent = "Location locked";
+  }
+});
+
