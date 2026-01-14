@@ -2,9 +2,19 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+<<<<<<< HEAD:dashboard.html
     <title>Trash Dash - Dashboard</title>
+=======
+    <title>Trash Dash Dashboard</title>
+
+    <!-- Main Styles -->
+>>>>>>> d2fc4df4fcc20712968c3379e7e4d862c81b09b3:index.html
     <link rel="stylesheet" href="style.css" />
+
+    <!-- Leaflet CSS (map styling only, logic later) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   </head>
+
   <body>
     <header class="topbar">
       <div class="logo">STRANGER TRASH</div>
@@ -19,25 +29,41 @@
       </nav>
       
 
+<<<<<<< HEAD:dashboard.html
       <section
         id="dashboard"
         class="tab-content active"
         aria-label="Game dashboard"
       >
+=======
+      <!-- DASHBOARD TAB -->
+      <section id="dashboard" class="tab-content active">
+>>>>>>> d2fc4df4fcc20712968c3379e7e4d862c81b09b3:index.html
         <section class="dashboard-grid">
-          <!-- Left side: Map + Quest overview -->
+          <!-- LEFT -->
           <div class="dashboard-left">
-            <section class="card map-card" aria-label="Zone map">
+            <!-- ZONE MAP CARD -->
+            <section class="card map-card">
               <h3>Zone Overview</h3>
               <p class="zone-name">
                 Current Zone: <span>Crimson Wastefront</span>
               </p>
 
+              <!-- MAP WRAPPER -->
               <div class="map-wrapper">
-                <div id="zoneMap"></div>
+                <!-- ACTUAL MAP CONTAINER (NEW) -->
+                <div
+                  id="zoneMap"
+                  class="zone-map-canvas"
+                  data-zone="crimson-wastefront"
+                  data-map-type="game-zone"
+                  aria-label="Interactive zone map"
+                ></div>
 
+                <!-- Overlay label -->
                 <div class="map-label">ZONE MAP</div>
 
+                <!-- Legend -->
                 <div class="map-legend">
                   <span class="dot main"></span> Main
                   <span class="dot side"></span> Side
@@ -45,14 +71,16 @@
                 </div>
               </div>
 
-              <div class="map-filters" aria-label="Quest filters">
+              <!-- Filters -->
+              <div class="map-filters">
                 <label><input type="checkbox" checked /> Main quests</label>
                 <label><input type="checkbox" checked /> Side quests</label>
                 <label><input type="checkbox" checked /> Completed</label>
               </div>
             </section>
 
-            <section class="card boss-and-quests" aria-label="Boss and quests">
+            <!-- BOSS + QUESTS -->
+            <section class="card boss-and-quests">
               <div class="boss-header">
                 <div>
                   <p class="section-label">ACTIVE BOSS</p>
@@ -103,12 +131,13 @@
             </section>
           </div>
 
+<<<<<<< HEAD:dashboard.html
           <!-- Right side: Party, Leaderboards, Rewards, Mission -->
+=======
+          <!-- RIGHT -->
+>>>>>>> d2fc4df4fcc20712968c3379e7e4d862c81b09b3:index.html
           <div class="dashboard-right">
-            <section
-              class="card party-card"
-              aria-label="Party and collaboration"
-            >
+            <section class="card party-card">
               <div class="card-header-row">
                 <h3>Party / Collaborate</h3>
                 <button class="tiny-btn">Invite</button>
@@ -132,7 +161,7 @@
               </ul>
             </section>
 
-            <section class="card leaderboard-card" aria-label="Leaderboards">
+            <section class="card leaderboard-card">
               <div class="leaderboard-columns">
                 <div>
                   <h3>Zonal Leaderboard</h3>
@@ -174,7 +203,7 @@
               </div>
             </section>
 
-            <section class="card rewards-card" aria-label="Rewards progress">
+            <section class="card rewards-card">
               <h3>Rewards Progress</h3>
               <div class="reward-row">
                 <div>
@@ -201,11 +230,18 @@
               </div>
             </section>
 
+<<<<<<< HEAD:dashboard.html
             <!-- Mission card (Playful Impact removed) -->
             <section class="card mission-card">
               <h3>Your Mission</h3>
               <h2 class="mission-title">Trash Dash</h2>
               <p class="mission-text">
+=======
+            <section class="card">
+              <h3>Your Mission</h3>
+              <h2>Trash Dash</h2>
+              <p>
+>>>>>>> d2fc4df4fcc20712968c3379e7e4d862c81b09b3:index.html
                 What if solving environmental problems could be as fun as
                 playing a game?
               </p>
@@ -213,9 +249,43 @@
           </div>
         </section>
       </section>
+<<<<<<< HEAD:dashboard.html
     </main>
 
+=======
+
+      <!-- PROFILE TAB (UNCHANGED) -->
+      <section id="profile" class="tab-content">
+        <div class="avatar-placeholder" aria-label="Player avatar"></div>
+      </section>
+    </main>
+
+    <!-- Tab logic -->
+    <script>
+      (function () {
+        var tabButtons = document.querySelectorAll(".tab-button");
+        var tabContents = document.querySelectorAll(".tab-content");
+
+        tabButtons.forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            var target = this.getAttribute("data-tab");
+            if (!target) return;
+
+            tabButtons.forEach((b) => b.classList.remove("active"));
+            tabContents.forEach((c) => c.classList.remove("active"));
+
+            this.classList.add("active");
+            document.getElementById(target)?.classList.add("active");
+          });
+        });
+      })();
+    </script>
+
+    <!-- Leaflet JS (logic later) -->
+>>>>>>> d2fc4df4fcc20712968c3379e7e4d862c81b09b3:index.html
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <!-- Your future map logic -->
     <script src="map.js"></script>
   </body>
 </html>

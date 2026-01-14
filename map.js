@@ -1,9 +1,10 @@
 console.log("CareerForge loaded");
 
-// Basic validation for the Student / Employee registration form
+// ================= FORM VALIDATION =================
+
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("studentRegisterForm");
-  if (!form) return; // Only run on the student register page
+  if (!form) return;
 
   const firstNameInput = document.getElementById("firstName");
   const lastNameInput = document.getElementById("lastName");
@@ -27,17 +28,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  const isValidGmail = (value) => {
-    const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
-    return gmailRegex.test(value);
-  };
+  const isValidGmail = (value) =>
+    /^[a-zA-Z0-9._%+-]+@gmail\.com$/.test(value);
 
-  const isValidPassword = (value) => {
-    // At least 8 chars, 1 uppercase, 1 lowercase, 1 number, 1 symbol
-    const passwordRegex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
-    return passwordRegex.test(value);
-  };
+  const isValidPassword = (value) =>
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/.test(value);
 
   form.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -65,7 +60,10 @@ document.addEventListener("DOMContentLoaded", () => {
       setError("email", "Gmail address is required.");
       hasError = true;
     } else if (!isValidGmail(emailValue)) {
-      setError("email", "Please enter a valid Gmail address (ends with @gmail.com).");
+      setError(
+        "email",
+        "Please enter a valid Gmail address (ends with @gmail.com)."
+      );
       hasError = true;
     }
 
@@ -83,78 +81,107 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (hasError) {
       if (formMessage) {
-        formMessage.textContent = "Please fix the errors above and try again.";
+        formMessage.textContent =
+          "Please fix the errors above and try again.";
         formMessage.classList.add("error");
       }
       return;
     }
 
-    // For now just show a success message – this is where you'd send data to a backend.
     if (formMessage) {
-      formMessage.textContent = "Registration details look good! (Demo only, not submitted.)";
+      formMessage.textContent =
+        "Registration details look good! (Demo only, not submitted.)";
       formMessage.classList.remove("error");
     }
-
-    // Optionally clear the form
-    // form.reset();
   });
 });
 
 // ================= ZONE MAP FEATURE =================
 
-// Make sure map exists on page
 document.addEventListener("DOMContentLoaded", () => {
   const mapContainer = document.getElementById("zoneMap");
-  if (!mapContainer) return;
+  if (!mapContainer || typeof L === "undefined") return;
 
-  // Initialize map
-  const map = L.map("zoneMap", {
+  // 🔹 Create map and expose globally (IMPORTANT for tabs)
+  window.zoneMapInstance = L.map("zoneMap", {
     zoomControl: false,
     attributionControl: false
   });
 
-  // OpenStreetMap tiles
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom: 19
-  }).addTo(map);
+  }).addTo(window.zoneMapInstance);
 
-  // Try to get user location
+  // Default fallback view
+  window.zoneMapInstance.setView([10.5276, 76.2144], 14);
+
+  // Try user location
   navigator.geolocation.getCurrentPosition(
     (pos) => {
       const lat = pos.coords.latitude;
       const lng = pos.coords.longitude;
 
-      map.setView([lat, lng], 15);
+      window.zoneMapInstance.setView([lat, lng], 15);
 
-      // User marker
-      L.circleMarker([lat, lng], {
-        radius: 6,
-        color: "#ff0000",
-        fillColor: "#ff0000",
-        fillOpacity: 0.9
-      })
-      .addTo(map)
-      .bindPopup("You are here");
+      const userIcon = L.icon({
+  iconUrl: "you.jpg",
+  iconSize: [36, 36],      // size of image
+  iconAnchor: [18, 18],   // center the icon
+  popupAnchor: [0, -18],  // popup position
+  className: "user-map-icon"
+});
+
+L.marker([lat, lng], {
+  icon: userIcon
+})
+.addTo(window.zoneMapInstance)
+.bindPopup("You are here");
+
     },
-    () => {
-      // Fallback location (demo)
-      map.setView([10.5276, 76.2144], 14);
-    }
+    () => {}
   );
 
-  // Example quest markers (demo)
+  // Demo quest markers
   L.circleMarker([10.5282, 76.2150], {
     radius: 6,
     color: "#ff4d4d"
-  }).addTo(map);
+  }).addTo(window.zoneMapInstance);
 
   L.circleMarker([10.5268, 76.2135], {
     radius: 6,
     color: "#ffcc33"
-  }).addTo(map);
+  }).addTo(window.zoneMapInstance);
 
   L.circleMarker([10.5272, 76.2128], {
     radius: 6,
     color: "#33ff99"
-  }).addTo(map);
+  }).addTo(window.zoneMapInstance);
+});
+
+// ================= TAB SWITCHING FIX =================
+
+document.addEventListener("DOMContentLoaded", () => {
+  const tabButtons = document.querySelectorAll(".tab-button");
+  const tabContents = document.querySelectorAll(".tab-content");
+
+  tabButtons.forEach((btn) => {
+    btn.addEventListener("click", function () {
+      const target = this.getAttribute("data-tab");
+      if (!target) return;
+
+      tabButtons.forEach((b) => b.classList.remove("active"));
+      tabContents.forEach((c) => c.classList.remove("active"));
+
+      this.classList.add("active");
+      const panel = document.getElementById(target);
+      if (panel) panel.classList.add("active");
+
+      // 🔴 REQUIRED: re-render Leaflet AFTER dashboard tab is visible
+      if (target === "dashboard" && window.zoneMapInstance) {
+        setTimeout(() => {
+          window.zoneMapInstance.invalidateSize();
+        }, 50);
+      }
+    });
+  });
 });
