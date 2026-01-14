@@ -6,7 +6,9 @@ from models import db, User
 
 
 def create_app():
-    app = Flask(__name__, template_folder="templates", static_folder="static")
+    # serve HTML files that live in the repo root (e.g. auth.html, dashboard.html)
+    # and make root URLs (e.g. `/style.css`) resolve to project files during dev.
+    app = Flask(__name__, template_folder=".", static_folder=".", static_url_path="")
 
     # Core configuration
     app.config["SECRET_KEY"] = "change-this-secret-key"
@@ -122,6 +124,12 @@ def mission_page():
 @login_required
 def store_page():
     return render_template("store.html")
+
+    # Serve a default frontend page at root to avoid 404 on '/'.
+    @app.route("/")
+    def index():
+        # default to the auth page; change to 'dashboard.html' if you prefer
+        return app.send_static_file("auth.html")
 
     return app
 
