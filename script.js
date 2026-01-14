@@ -99,3 +99,62 @@ document.addEventListener("DOMContentLoaded", () => {
     // form.reset();
   });
 });
+
+// ================= ZONE MAP FEATURE =================
+
+// Make sure map exists on page
+document.addEventListener("DOMContentLoaded", () => {
+  const mapContainer = document.getElementById("zoneMap");
+  if (!mapContainer) return;
+
+  // Initialize map
+  const map = L.map("zoneMap", {
+    zoomControl: false,
+    attributionControl: false
+  });
+
+  // OpenStreetMap tiles
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom: 19
+  }).addTo(map);
+
+  // Try to get user location
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      const lat = pos.coords.latitude;
+      const lng = pos.coords.longitude;
+
+      map.setView([lat, lng], 15);
+
+      // User marker
+      L.circleMarker([lat, lng], {
+        radius: 6,
+        color: "#ff0000",
+        fillColor: "#ff0000",
+        fillOpacity: 0.9
+      })
+      .addTo(map)
+      .bindPopup("You are here");
+    },
+    () => {
+      // Fallback location (demo)
+      map.setView([10.5276, 76.2144], 14);
+    }
+  );
+
+  // Example quest markers (demo)
+  L.circleMarker([10.5282, 76.2150], {
+    radius: 6,
+    color: "#ff4d4d"
+  }).addTo(map);
+
+  L.circleMarker([10.5268, 76.2135], {
+    radius: 6,
+    color: "#ffcc33"
+  }).addTo(map);
+
+  L.circleMarker([10.5272, 76.2128], {
+    radius: 6,
+    color: "#33ff99"
+  }).addTo(map);
+});

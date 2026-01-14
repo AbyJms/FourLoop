@@ -1,327 +1,369 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Trash Dash Dashboard</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-
-<header class="topbar">
-  <div class="logo">FOURLOOP</div>
-  <div class="steps">
-    <span class="active">Topic Selection</span>
-    <span>Submission</span>
-    <span>Results</span>
-  </div>
-  <button class="logout">Logout</button>
-</header>
-
-<main class="main-layout">
-  <nav class="tabs">
-    <button class="tab-button active" data-tab="dashboard">Dashboard</button>
-    <button class="tab-button" data-tab="profile">Profile</button>
-  </nav>
-
-  <!-- DASHBOARD TAB -->
-  <section id="dashboard" class="tab-content active" aria-label="Game dashboard">
-    <section class="timer-card">
-      <p class="label">TIME REMAINING</p>
-      <div class="timer">
-        <span>23</span>:<span>12</span>:<span>55</span>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Trash Dash Dashboard</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="logo">FOURLOOP</div>
+      <div class="steps">
+        <span class="active">Topic Selection</span>
+        <span>Submission</span>
+        <span>Results</span>
       </div>
-      <p class="timer-caption">Current cycle countdown</p>
-    </section>
+      <button class="logout">Logout</button>
+    </header>
 
-    <section class="dashboard-grid">
-      <!-- Left side: Map + Quest overview -->
-      <div class="dashboard-left">
-        <section class="card map-card" aria-label="Zone map">
-          <h3>Zone Overview</h3>
-          <p class="zone-name">Current Zone: <span>Crimson Wastefront</span></p>
+    <main class="main-layout">
+      <nav class="tabs">
+        <button class="tab-button active" data-tab="dashboard">
+          Dashboard
+        </button>
+        <button class="tab-button" data-tab="profile">Profile</button>
+      </nav>
 
-          <div class="map-placeholder">
-            <div class="map-label">Zone Map</div>
-            <div class="map-overlay">Zone boundaries &amp; quest markers</div>
-            <div class="map-legend">
-              <span class="dot main"></span> Main Quest
-              <span class="dot side"></span> Side Quest
-              <span class="dot completed"></span> Completed
-            </div>
+      <!-- DASHBOARD TAB -->
+      <section
+        id="dashboard"
+        class="tab-content active"
+        aria-label="Game dashboard"
+      >
+        <section class="timer-card">
+          <p class="label">TIME REMAINING</p>
+          <div class="timer">
+            <span>23</span>:<span>12</span>:<span>55</span>
           </div>
-
-          <div class="map-filters" aria-label="Quest filters">
-            <label><input type="checkbox" checked> Main quests</label>
-            <label><input type="checkbox" checked> Side quests</label>
-            <label><input type="checkbox" checked> Completed</label>
-          </div>
+          <p class="timer-caption">Current cycle countdown</p>
         </section>
 
-        <section class="card boss-and-quests" aria-label="Boss and quests">
-          <div class="boss-header">
-            <div>
-              <p class="section-label">ACTIVE BOSS</p>
-              <h2 class="boss-name">Queen of Plastics</h2>
-            </div>
-            <div class="boss-meta">
-              <p>Zone: <span>Crimson Wastefront</span></p>
-              <p>Cycle: <span>Nightfall Raid</span></p>
-            </div>
-          </div>
+        <section class="dashboard-grid">
+          <!-- Left side: Map + Quest overview -->
+          <div class="dashboard-left">
+            <section class="card map-card" aria-label="Zone map">
+              <h3>Zone Overview</h3>
+              <p class="zone-name">
+                Current Zone: <span>Crimson Wastefront</span>
+              </p>
 
-          <div class="hp-bar-wrapper">
-            <div class="hp-bar-label">
-              <span>Boss HP</span>
-              <span>42% remaining</span>
-            </div>
-            <div class="hp-bar">
-              <div class="hp-bar-inner" style="width: 42%;"></div>
-            </div>
-          </div>
+              <div class="map-wrapper">
+                <div id="zoneMap"></div>
 
-          <div class="cycle-timer-inline">
-            <span class="label">Time remaining this cycle:</span>
-            <span class="cycle-time">23:12:55</span>
-          </div>
+                <div class="map-label">ZONE MAP</div>
 
-          <div class="quests-columns">
-            <div class="quests-list">
-              <h3>Active Main Quests</h3>
-              <ul>
-                <li>Clear 3 hotspot alleys of plastic waste</li>
-                <li>Coordinate a 10-member clean-up squad</li>
-                <li>Secure recycling drop-points in 2 zones</li>
-              </ul>
-            </div>
-            <div class="quests-list">
-              <h3>Active Side Quests</h3>
-              <ul>
-                <li>Photo-document the weirdest litter artifact</li>
-                <li>Design a meme to recruit new players</li>
-                <li>Map an undocumented dumping spot</li>
-              </ul>
-              <button class="primary-btn add-side-quest">Add Side Quest</button>
-            </div>
-          </div>
-        </section>
-      </div>
-
-      <!-- Right side: Party, Leaderboards, Rewards, Original cards -->
-      <div class="dashboard-right">
-        <section class="card party-card" aria-label="Party and collaboration">
-          <div class="card-header-row">
-            <h3>Party / Collaborate</h3>
-            <button class="tiny-btn">Invite</button>
-          </div>
-          <ul class="party-list">
-            <li>
-              <span class="party-name">EchoRanger</span>
-              <span class="party-role">Squad Lead</span>
-              <span class="party-status online">Online</span>
-            </li>
-            <li>
-              <span class="party-name">NeonRecycler</span>
-              <span class="party-role">Scout</span>
-              <span class="party-status ingame">In Run</span>
-            </li>
-            <li>
-              <span class="party-name">GlassKnight</span>
-              <span class="party-role">Heavy Lifter</span>
-              <span class="party-status offline">Offline</span>
-            </li>
-          </ul>
-        </section>
-
-        <section class="card leaderboard-card" aria-label="Leaderboards">
-          <div class="leaderboard-columns">
-            <div>
-              <h3>Zonal Leaderboard</h3>
-              <ol class="leaderboard-list">
-                <li><span>Crimson Sweepers</span><span class="score">12,340 pts</span></li>
-                <li><span>Neon Nomads</span><span class="score">11,980 pts</span></li>
-                <li><span>Waste Warriors</span><span class="score">10,420 pts</span></li>
-              </ol>
-            </div>
-            <div>
-              <h3>National Leaderboard</h3>
-              <ol class="leaderboard-list">
-                <li><span>Empire of Clean</span><span class="score">120,450 pts</span></li>
-                <li><span>Redline Reclaimers</span><span class="score">118,900 pts</span></li>
-                <li><span>ZeroWaste Union</span><span class="score">115,320 pts</span></li>
-              </ol>
-            </div>
-          </div>
-          <div class="center">
-            <button class="leaderboard">View Full Leaderboard</button>
-          </div>
-        </section>
-
-        <section class="card rewards-card" aria-label="Rewards progress">
-          <h3>Rewards Progress</h3>
-          <div class="reward-row">
-            <div>
-              <p class="reward-label">Tier Progress</p>
-              <div class="bar">
-                <div class="bar-fill" style="width: 65%;"></div>
+                <div class="map-legend">
+                  <span class="dot main"></span> Main
+                  <span class="dot side"></span> Side
+                  <span class="dot completed"></span> Done
+                </div>
               </div>
-              <p class="muted">65% of Tier II unlocked</p>
-            </div>
+
+              <div class="map-filters" aria-label="Quest filters">
+                <label><input type="checkbox" checked /> Main quests</label>
+                <label><input type="checkbox" checked /> Side quests</label>
+                <label><input type="checkbox" checked /> Completed</label>
+              </div>
+            </section>
+
+            <section class="card boss-and-quests" aria-label="Boss and quests">
+              <div class="boss-header">
+                <div>
+                  <p class="section-label">ACTIVE BOSS</p>
+                  <h2 class="boss-name">Queen of Plastics</h2>
+                </div>
+                <div class="boss-meta">
+                  <p>Zone: <span>Crimson Wastefront</span></p>
+                  <p>Cycle: <span>Nightfall Raid</span></p>
+                </div>
+              </div>
+
+              <div class="hp-bar-wrapper">
+                <div class="hp-bar-label">
+                  <span>Boss HP</span>
+                  <span>42% remaining</span>
+                </div>
+                <div class="hp-bar">
+                  <div class="hp-bar-inner" style="width: 42%"></div>
+                </div>
+              </div>
+
+              <div class="cycle-timer-inline">
+                <span class="label">Time remaining this cycle:</span>
+                <span class="cycle-time">23:12:55</span>
+              </div>
+
+              <div class="quests-columns">
+                <div class="quests-list">
+                  <h3>Active Main Quests</h3>
+                  <ul>
+                    <li>Clear 3 hotspot alleys of plastic waste</li>
+                    <li>Coordinate a 10-member clean-up squad</li>
+                    <li>Secure recycling drop-points in 2 zones</li>
+                  </ul>
+                </div>
+                <div class="quests-list">
+                  <h3>Active Side Quests</h3>
+                  <ul>
+                    <li>Photo-document the weirdest litter artifact</li>
+                    <li>Design a meme to recruit new players</li>
+                    <li>Map an undocumented dumping spot</li>
+                  </ul>
+                  <button class="primary-btn add-side-quest">
+                    Add Side Quest
+                  </button>
+                </div>
+              </div>
+            </section>
           </div>
-          <div class="reward-grid">
+
+          <!-- Right side: Party, Leaderboards, Rewards, Original cards -->
+          <div class="dashboard-right">
+            <section
+              class="card party-card"
+              aria-label="Party and collaboration"
+            >
+              <div class="card-header-row">
+                <h3>Party / Collaborate</h3>
+                <button class="tiny-btn">Invite</button>
+              </div>
+              <ul class="party-list">
+                <li>
+                  <span class="party-name">EchoRanger</span>
+                  <span class="party-role">Squad Lead</span>
+                  <span class="party-status online">Online</span>
+                </li>
+                <li>
+                  <span class="party-name">NeonRecycler</span>
+                  <span class="party-role">Scout</span>
+                  <span class="party-status ingame">In Run</span>
+                </li>
+                <li>
+                  <span class="party-name">GlassKnight</span>
+                  <span class="party-role">Heavy Lifter</span>
+                  <span class="party-status offline">Offline</span>
+                </li>
+              </ul>
+            </section>
+
+            <section class="card leaderboard-card" aria-label="Leaderboards">
+              <div class="leaderboard-columns">
+                <div>
+                  <h3>Zonal Leaderboard</h3>
+                  <ol class="leaderboard-list">
+                    <li>
+                      <span>Crimson Sweepers</span
+                      ><span class="score">12,340 pts</span>
+                    </li>
+                    <li>
+                      <span>Neon Nomads</span
+                      ><span class="score">11,980 pts</span>
+                    </li>
+                    <li>
+                      <span>Waste Warriors</span
+                      ><span class="score">10,420 pts</span>
+                    </li>
+                  </ol>
+                </div>
+                <div>
+                  <h3>National Leaderboard</h3>
+                  <ol class="leaderboard-list">
+                    <li>
+                      <span>Empire of Clean</span
+                      ><span class="score">120,450 pts</span>
+                    </li>
+                    <li>
+                      <span>Redline Reclaimers</span
+                      ><span class="score">118,900 pts</span>
+                    </li>
+                    <li>
+                      <span>ZeroWaste Union</span
+                      ><span class="score">115,320 pts</span>
+                    </li>
+                  </ol>
+                </div>
+              </div>
+              <div class="center">
+                <button class="leaderboard">View Full Leaderboard</button>
+              </div>
+            </section>
+
+            <section class="card rewards-card" aria-label="Rewards progress">
+              <h3>Rewards Progress</h3>
+              <div class="reward-row">
+                <div>
+                  <p class="reward-label">Tier Progress</p>
+                  <div class="bar">
+                    <div class="bar-fill" style="width: 65%"></div>
+                  </div>
+                  <p class="muted">65% of Tier II unlocked</p>
+                </div>
+              </div>
+              <div class="reward-grid">
+                <div>
+                  <p class="reward-label">Tokens earned</p>
+                  <p class="reward-value">3,250</p>
+                </div>
+                <div>
+                  <p class="reward-label">Rewards redeemed</p>
+                  <p class="reward-value">7</p>
+                </div>
+                <div>
+                  <p class="reward-label">Next milestone</p>
+                  <p class="reward-value">Legendary Badge</p>
+                </div>
+              </div>
+            </section>
+
+            <!-- Original mission / submission / scores cards preserved -->
+            <section class="card">
+              <h3>Your Mission</h3>
+              <span class="tag">PLAYFUL IMPACT</span>
+              <h2>Trash Dash</h2>
+              <p>
+                What if solving environmental problems could be as fun as
+                playing a game?
+              </p>
+            </section>
+
+            <section class="card">
+              <h3>Submission Progress</h3>
+              <p>Images <span class="right">0/5</span></p>
+              <div class="bar"></div>
+              <p>Learnings <span class="right">0/11</span></p>
+              <div class="bar"></div>
+              <button class="disabled">Submission Closed</button>
+            </section>
+
+            <section class="card">
+              <h3>Your Scores</h3>
+              <p class="muted">Scores not yet available</p>
+              <p class="muted">Check back after evaluation</p>
+            </section>
+          </div>
+        </section>
+      </section>
+
+      <!-- PROFILE TAB -->
+      <section id="profile" class="tab-content" aria-label="Player profile">
+        <section class="profile-header card">
+          <div class="profile-main">
+            <div class="avatar-placeholder" aria-label="Player avatar"></div>
             <div>
-              <p class="reward-label">Tokens earned</p>
-              <p class="reward-value">3,250</p>
-            </div>
-            <div>
-              <p class="reward-label">Rewards redeemed</p>
-              <p class="reward-value">7</p>
-            </div>
-            <div>
-              <p class="reward-label">Next milestone</p>
-              <p class="reward-value">Legendary Badge</p>
+              <p class="section-label">USERNAME</p>
+              <h2 class="profile-username">NeonVanguard</h2>
+              <p class="current-title">
+                Current Title: <span>Emperor of Wastefront</span>
+              </p>
+              <p class="title-badge">King • Queen • Emperor • Empress</p>
             </div>
           </div>
+          <div class="profile-actions">
+            <button class="primary-btn">Profile</button>
+            <button class="secondary-btn">Logout</button>
+          </div>
         </section>
 
-        <!-- Original mission / submission / scores cards preserved -->
-        <section class="card">
-          <h3>Your Mission</h3>
-          <span class="tag">PLAYFUL IMPACT</span>
-          <h2>Trash Dash</h2>
-          <p>What if solving environmental problems could be as fun as playing a game?</p>
+        <section class="profile-grid">
+          <section class="card">
+            <h3>Core Stats</h3>
+            <div class="stats-grid">
+              <div>
+                <p class="stat-label">Total lifetime points</p>
+                <p class="stat-value">154,230</p>
+              </div>
+              <div>
+                <p class="stat-label">Current cycle points</p>
+                <p class="stat-value">8,420</p>
+              </div>
+              <div>
+                <p class="stat-label">Damage contributed</p>
+                <p class="stat-value">2.4M HP</p>
+              </div>
+              <div>
+                <p class="stat-label">Zones participated</p>
+                <p class="stat-value">18</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="card">
+            <h3>Quest History</h3>
+            <ul class="profile-list">
+              <li>Completed quests: <span>126</span></li>
+              <li>Created side quests: <span>34</span></li>
+              <li>Verification success rate: <span>96%</span></li>
+            </ul>
+          </section>
+
+          <section class="card">
+            <h3>Title History</h3>
+            <ul class="profile-list">
+              <li>King of Alleyways (Cycle 02)</li>
+              <li>Queen of Scrap (Cycle 05)</li>
+              <li>Emperor of Wastefront (Cycle 08)</li>
+            </ul>
+          </section>
+
+          <section class="card">
+            <h3>Party History</h3>
+            <ul class="profile-list">
+              <li>Neon Nomads • 12 cycles</li>
+              <li>Crimson Sweepers • 4 cycles</li>
+              <li>ZeroWaste Union • 1 cycle (guest)</li>
+            </ul>
+          </section>
+
+          <section class="card">
+            <h3>Rewards &amp; Redemptions</h3>
+            <ul class="profile-list">
+              <li>Rewards redeemed: <span>14</span></li>
+              <li>Current token balance: <span>1,120</span></li>
+              <li>Next unlock: <span>Mythic Outfit</span></li>
+            </ul>
+          </section>
+
+          <section class="card">
+            <h3>Achievements &amp; Badges</h3>
+            <div class="badge-row">
+              <span class="badge">Street Sweeper</span>
+              <span class="badge">Night Ops</span>
+              <span class="badge">Squad Architect</span>
+              <span class="badge">ZeroWaste Evangelist</span>
+            </div>
+          </section>
         </section>
-
-        <section class="card">
-          <h3>Submission Progress</h3>
-          <p>Images <span class="right">0/5</span></p>
-          <div class="bar"></div>
-          <p>Learnings <span class="right">0/11</span></p>
-          <div class="bar"></div>
-          <button class="disabled">Submission Closed</button>
-        </section>
-
-        <section class="card">
-          <h3>Your Scores</h3>
-          <p class="muted">Scores not yet available</p>
-          <p class="muted">Check back after evaluation</p>
-        </section>
-      </div>
-    </section>
-  </section>
-
-  <!-- PROFILE TAB -->
-  <section id="profile" class="tab-content" aria-label="Player profile">
-    <section class="profile-header card">
-      <div class="profile-main">
-        <div class="avatar-placeholder" aria-label="Player avatar"></div>
-        <div>
-          <p class="section-label">USERNAME</p>
-          <h2 class="profile-username">NeonVanguard</h2>
-          <p class="current-title">Current Title: <span>Emperor of Wastefront</span></p>
-          <p class="title-badge">King • Queen • Emperor • Empress</p>
-        </div>
-      </div>
-      <div class="profile-actions">
-        <button class="primary-btn">Profile</button>
-        <button class="secondary-btn">Logout</button>
-      </div>
-    </section>
-
-    <section class="profile-grid">
-      <section class="card">
-        <h3>Core Stats</h3>
-        <div class="stats-grid">
-          <div>
-            <p class="stat-label">Total lifetime points</p>
-            <p class="stat-value">154,230</p>
-          </div>
-          <div>
-            <p class="stat-label">Current cycle points</p>
-            <p class="stat-value">8,420</p>
-          </div>
-          <div>
-            <p class="stat-label">Damage contributed</p>
-            <p class="stat-value">2.4M HP</p>
-          </div>
-          <div>
-            <p class="stat-label">Zones participated</p>
-            <p class="stat-value">18</p>
-          </div>
-        </div>
       </section>
+    </main>
 
-      <section class="card">
-        <h3>Quest History</h3>
-        <ul class="profile-list">
-          <li>Completed quests: <span>126</span></li>
-          <li>Created side quests: <span>34</span></li>
-          <li>Verification success rate: <span>96%</span></li>
-        </ul>
-      </section>
+    <script>
+      // Simple tab switching, no frameworks
+      (function () {
+        var tabButtons = document.querySelectorAll(".tab-button");
+        var tabContents = document.querySelectorAll(".tab-content");
 
-      <section class="card">
-        <h3>Title History</h3>
-        <ul class="profile-list">
-          <li>King of Alleyways (Cycle 02)</li>
-          <li>Queen of Scrap (Cycle 05)</li>
-          <li>Emperor of Wastefront (Cycle 08)</li>
-        </ul>
-      </section>
+        tabButtons.forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            var target = this.getAttribute("data-tab");
+            if (!target) return;
 
-      <section class="card">
-        <h3>Party History</h3>
-        <ul class="profile-list">
-          <li>Neon Nomads • 12 cycles</li>
-          <li>Crimson Sweepers • 4 cycles</li>
-          <li>ZeroWaste Union • 1 cycle (guest)</li>
-        </ul>
-      </section>
+            tabButtons.forEach(function (b) {
+              b.classList.remove("active");
+            });
+            tabContents.forEach(function (c) {
+              c.classList.remove("active");
+            });
 
-      <section class="card">
-        <h3>Rewards &amp; Redemptions</h3>
-        <ul class="profile-list">
-          <li>Rewards redeemed: <span>14</span></li>
-          <li>Current token balance: <span>1,120</span></li>
-          <li>Next unlock: <span>Mythic Outfit</span></li>
-        </ul>
-      </section>
-
-      <section class="card">
-        <h3>Achievements &amp; Badges</h3>
-        <div class="badge-row">
-          <span class="badge">Street Sweeper</span>
-          <span class="badge">Night Ops</span>
-          <span class="badge">Squad Architect</span>
-          <span class="badge">ZeroWaste Evangelist</span>
-        </div>
-      </section>
-    </section>
-  </section>
-</main>
-
-<script>
-  // Simple tab switching, no frameworks
-  (function () {
-    var tabButtons = document.querySelectorAll('.tab-button');
-    var tabContents = document.querySelectorAll('.tab-content');
-
-    tabButtons.forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        var target = this.getAttribute('data-tab');
-        if (!target) return;
-
-        tabButtons.forEach(function (b) { b.classList.remove('active'); });
-        tabContents.forEach(function (c) { c.classList.remove('active'); });
-
-        this.classList.add('active');
-        var panel = document.getElementById(target);
-        if (panel) {
-          panel.classList.add('active');
-        }
-      });
-    });
-  })();
-</script>
-
-</body>
+            this.classList.add("active");
+            var panel = document.getElementById(target);
+            if (panel) {
+              panel.classList.add("active");
+            }
+          });
+        });
+      })();
+    </script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="map.js"></script>
+  </body>
 </html>

@@ -646,3 +646,73 @@ body {
     overflow-x: auto;
   }
 }
+
+/* ================= MAP FEATURE ================= */
+
+.map-wrapper {
+  position: relative;
+  height: 260px;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 0, 0, 0.7);
+  background: radial-gradient(circle at top, #1b1020, #05050a);
+  box-shadow: inset 0 0 30px rgba(255, 0, 0, 0.3);
+}
+
+#zoneMap {
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  filter: grayscale(0.4) contrast(1.1);
+}
+
+/* overlay text */
+.map-label {
+  position: absolute;
+  top: 12px;
+  left: 16px;
+  font-size: 12px;
+  letter-spacing: 2px;
+  opacity: 0.8;
+  z-index: 500;
+}
+
+/* legend */
+.map-legend {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 11px;
+  background: rgba(5, 5, 10, 0.9);
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 0, 0, 0.4);
+  z-index: 500;
+}
+
+.map-legend .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.map-legend .main {
+  background: #ff4d4d;
+}
+
+.map-legend .side {
+  background: #ffcc33;
+}
+
+.map-legend .completed {
+  background: #33ff99;
+}
+
+/* Fix Leaflet background for dark UI */
+.leaflet-container {
+  background: #05050a;
+}
