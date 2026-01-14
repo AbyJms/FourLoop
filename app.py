@@ -1,108 +1,72 @@
-from flask import Flask, request, jsonify
+import os
+from flask import Flask
+from flask_migrate import Migrate
 from flask_cors import CORS
-from flask_login import LoginManager, login_user, login_required, logout_user, current_user
-from werkzeug.security import generate_password_hash, check_password_hash
-from models import db, User
+from flask_jwt_extended import JWTManager
+from config import config
+from models import db
 
+# Import blueprints
+from routes.auth import auth_bp
+from routes.users import users_bp
+from routes.reports import reports_bp
+from routes.collections import collections_bp
+from routes.store import store_bp
+from routes.leaderboard import leaderboard_bp
 
-def create_app():
-    app = Flask(__name__, template_folder="templates", static_folder="static")
-
-    # Core configuration
-    app.config["SECRET_KEY"] = "change-this-secret-key"
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
-    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-
+def create_app(config_name='default'):
+    """Application factory pattern."""
+    app = Flask(__name__)
+    
+    # Load configuration
+    app.config.from_object(config[config_name])
+    
     # Initialize extensions
     db.init_app(app)
-
-    login_manager = LoginManager()
-    login_manager.login_view = "login"
-    login_manager.init_app(app)
-
-    # Enable CORS for all routes
-    CORS(app)
-
-    @login_manager.user_loader
-    def load_user(user_id):
-        return User.query.get(int(user_id))
-
-    # ------------------ API ROUTES ------------------
-
-    @app.route("/register", methods=["POST"])
-    def register():
-        data = request.json
-        if User.query.filter_by(email=data["email"]).first():
-            return jsonify({"error": "Email already exists"}), 400
-
-        user = User(email=data["email"])
-        user.set_password(data["password"])
-        db.session.add(user)
-        db.session.commit()
-        return jsonify({"message": "User registered successfully"}), 201
-
-    @app.route("/login", methods=["POST"])
-    def login():
-        data = request.json
-        user = User.query.filter_by(email=data["email"]).first()
-        if not user or not user.check_password(data["password"]):
-            return jsonify({"error": "Invalid credentials"}), 401
-
-        login_user(user)
-        return jsonify({"message": "Login successful", "email": user.email}), 200
-
-    @app.route("/logout", methods=["POST"])
-    @login_required
-    def logout():
-        logout_user()
-        return jsonify({"message": "Logged out successfully"}), 200
-
-    @app.route("/dashboard", methods=["GET"])
-    @login_required
-    def dashboard():
-        return jsonify({
-            "currentZone": "Crimson Wastefront",
-            "boss": {"name": "Queen of Plastics", "hp": 42},
-            "mainQuests": [
-                "Clear 3 hotspot alleys of plastic waste",
-                "Coordinate a 10-member clean-up squad",
-                "Secure recycling drop-points in 2 zones"
-            ],
-            "sideQuests": [
-                "Photo-document the weirdest litter artifact",
-                "Design a meme to recruit new players",
-                "Map an undocumented dumping spot"
-            ],
-            "party": [
-                {"name": "EchoRanger", "role": "Squad Lead", "status": "Online"},
-                {"name": "NeonRecycler", "role": "Scout", "status": "In Run"},
-                {"name": "GlassKnight", "role": "Heavy Lifter", "status": "Offline"},
-            ],
-            "leaderboard": {
-                "zonal": [
-                    {"team": "Crimson Sweepers", "score": 12340},
-                    {"team": "Neon Nomads", "score": 11980},
-                    {"team": "Waste Warriors", "score": 10420},
-                ],
-                "national": [
-                    {"team": "Empire of Clean", "score": 120450},
-                    {"team": "Redline Reclaimers", "score": 118900},
-                    {"team": "ZeroWaste Union", "score": 115320},
-                ]
-            },
-            "rewards": {
-                "tierProgress": 65,
-                "tokens": 3250,
-                "redeemed": 7,
-                "nextMilestone": "Legendary Badge"
-            }
-        })
-
+    migrate = Migrate(app, db)
+    CORS(app, resources={r"/api/*": {"origins": app.config.get('CORS_ORIGINS', '*').split(',')}})
+    jwt = JWTManager(app)
+    
+    # Create upload folder if it doesn't exist
+    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+    
+    # Register blueprints
+    app.register_blueprint(auth_bp, url_prefix='/api/auth')
+    app.register_blueprint(users_bp, url_prefix='/api/users')
+    app.register_blueprint(reports_bp, url_prefix='/api/reports')
+    app.register_blueprint(collections_bp, url_prefix='/api/collections')
+    app.register_blueprint(store_bp, url_prefix='/api/store')
+    app.register_blueprint(leaderboard_bp, url_prefix='/api/leaderboard')
+    
+    # Health check endpoint
+    @app.route('/api/health')
+    def health():
+        return {'status': 'healthy', 'message': 'FourLoop API is running'}
+    
+    # Error handlers
+    @app.errorhandler(404)
+    def not_found(error):
+        return {'error': 'Resource not found'}, 404
+    
+    @app.errorhandler(500)
+    def internal_error(error):
+        db.session.rollback()
+        return {'error': 'Internal server error'}, 500
+    
+    @jwt.expired_token_loader
+    def expired_token_callback(jwt_header, jwt_payload):
+        return {'error': 'Token has expired'}, 401
+    
+    @jwt.invalid_token_loader
+    def invalid_token_callback(error):
+        return {'error': 'Invalid token'}, 401
+    
+    @jwt.unauthorized_loader
+    def missing_token_callback(error):
+        return {'error': 'Authorization token is missing'}, 401
+    
     return app
 
-
-if __name__ == "__main__":
-    app = create_app()
-    with app.app_context():
-        db.create_all()  # creates database.db if it doesn’t exist
-    app.run(debug=True)
+if __name__ == '__main__':
+    app = create_app(os.environ.get('FLASK_ENV', 'development'))
+    app.run(debug=True, host='0.0.0.0', port=5000)
