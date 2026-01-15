@@ -1,108 +1,123 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
+from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
-from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
-from models import db, User
+import os
+
+# ---------------- APP SETUP ----------------
+app = Flask(__name__)
+
+CORS(
+    app,
+    resources={r"/api/*": {"origins": "*"}},
+    supports_credentials=True
+)
+
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+
+# ---------------- CONFIG ----------------
+app.config["SECRET_KEY"] = "dev-secret-key"  # dev only
+app.config["SQLALCHEMY_DATABASE_URI"] = (
+    "mysql+pymysql://root:AibinJames%402006@localhost:3307/testdash"
+)
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+db = SQLAlchemy(app)
+
+# ---------------- MODELS ----------------
+class User(db.Model):
+    __tablename__ = "user"  # YOU wanted singular — DONE
+
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(255), unique=True, nullable=False)
+    password_hash = db.Column(db.String(255), nullable=False)
+    role = db.Column(db.String(20), default="player")  # player | seeker | admin
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
+
+# ---------------- CREATE TABLES ----------------
+with app.app_context():
+    db.create_all()
+
+# ---------------- STATIC FILE SERVING ----------------
+@app.route("/")
+def root():
+    return send_from_directory(".", "auth.html")
+
+@app.route("/<path:filename>")
+def static_files(filename):
+    return send_from_directory(".", filename)
+
+# ---------------- DEBUG ----------------
+@app.route("/api/debug/users")
+def debug_users():
+    users = User.query.all()
+    return jsonify({
+        "users": [
+            {
+                "id": u.id,
+                "email": u.email,
+                "role": u.role
+            } for u in users
+        ]
+    })
+
+# ---------------- AUTH ----------------
+@app.route("/api/auth/register", methods=["POST"])
+def register():
+    data = request.json
+    if not data:
+        return jsonify({"error": "No data"}), 400
+
+    email = data.get("email")
+    password = data.get("password")
+    role = data.get("role", "player")
+
+    if not email or not password:
+        return jsonify({"error": "Missing fields"}), 400
+
+    if User.query.filter_by(email=email).first():
+        return jsonify({"error": "User already exists"}), 409
+
+    user = User(
+        email=email,
+        password_hash=generate_password_hash(password),
+        role=role
+    )
+
+    db.session.add(user)
+    db.session.commit()
+
+    return jsonify({"message": "Registered successfully"}), 201
 
 
-def create_app():
-    app = Flask(__name__, template_folder="templates", static_folder="static")
+@app.route("/api/auth/login", methods=["POST"])
+def login():
+    data = request.json
+    if not data:
+        return jsonify({"error": "No data"}), 400
 
-    # Core configuration
-    app.config["SECRET_KEY"] = "change-this-secret-key"
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
-    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    email = data.get("email")
+    password = data.get("password")
 
-    # Initialize extensions
-    db.init_app(app)
+    user = User.query.filter_by(email=email).first()
 
-    login_manager = LoginManager()
-    login_manager.login_view = "login"
-    login_manager.init_app(app)
+    if not user or not check_password_hash(user.password_hash, password):
+        return jsonify({"error": "Invalid credentials"}), 401
 
-    # Enable CORS for all routes
-    CORS(app)
+    return jsonify({
+        "message": "Login successful",
+        "email": user.email,
+        "role": user.role
+    }), 200
 
-    @login_manager.user_loader
-    def load_user(user_id):
-        return User.query.get(int(user_id))
+# ---------------- HEALTH ----------------
+@app.route("/api/health")
+def health():
+    return jsonify({
+        "status": "healthy",
+        "message": "FourLoop API is running"
+    })
 
-    # ------------------ API ROUTES ------------------
-
-    @app.route("/register", methods=["POST"])
-    def register():
-        data = request.json
-        if User.query.filter_by(email=data["email"]).first():
-            return jsonify({"error": "Email already exists"}), 400
-
-        user = User(email=data["email"])
-        user.set_password(data["password"])
-        db.session.add(user)
-        db.session.commit()
-        return jsonify({"message": "User registered successfully"}), 201
-
-    @app.route("/login", methods=["POST"])
-    def login():
-        data = request.json
-        user = User.query.filter_by(email=data["email"]).first()
-        if not user or not user.check_password(data["password"]):
-            return jsonify({"error": "Invalid credentials"}), 401
-
-        login_user(user)
-        return jsonify({"message": "Login successful", "email": user.email}), 200
-
-    @app.route("/logout", methods=["POST"])
-    @login_required
-    def logout():
-        logout_user()
-        return jsonify({"message": "Logged out successfully"}), 200
-
-    @app.route("/dashboard", methods=["GET"])
-    @login_required
-    def dashboard():
-        return jsonify({
-            "currentZone": "Crimson Wastefront",
-            "boss": {"name": "Queen of Plastics", "hp": 42},
-            "mainQuests": [
-                "Clear 3 hotspot alleys of plastic waste",
-                "Coordinate a 10-member clean-up squad",
-                "Secure recycling drop-points in 2 zones"
-            ],
-            "sideQuests": [
-                "Photo-document the weirdest litter artifact",
-                "Design a meme to recruit new players",
-                "Map an undocumented dumping spot"
-            ],
-            "party": [
-                {"name": "EchoRanger", "role": "Squad Lead", "status": "Online"},
-                {"name": "NeonRecycler", "role": "Scout", "status": "In Run"},
-                {"name": "GlassKnight", "role": "Heavy Lifter", "status": "Offline"},
-            ],
-            "leaderboard": {
-                "zonal": [
-                    {"team": "Crimson Sweepers", "score": 12340},
-                    {"team": "Neon Nomads", "score": 11980},
-                    {"team": "Waste Warriors", "score": 10420},
-                ],
-                "national": [
-                    {"team": "Empire of Clean", "score": 120450},
-                    {"team": "Redline Reclaimers", "score": 118900},
-                    {"team": "ZeroWaste Union", "score": 115320},
-                ]
-            },
-            "rewards": {
-                "tierProgress": 65,
-                "tokens": 3250,
-                "redeemed": 7,
-                "nextMilestone": "Legendary Badge"
-            }
-        })
-
-    return app
-
-
+# ---------------- RUN ----------------
 if __name__ == "__main__":
-    app = create_app()
-    with app.app_context():
-        db.create_all()  # creates database.db if it doesn’t exist
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0", port=5000)
