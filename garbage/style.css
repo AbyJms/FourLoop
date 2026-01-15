@@ -1188,3 +1188,32 @@ body {
 .heading{
   color: #ff0404;
 }
+
+/* PROFILE STATS */
+.profile-stats {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.6em;
+  font-weight: 600;
+}
+
+.stat-label {
+  color: #ffffff;
+  letter-spacing: 1px;
+}
+
+.stat-value {
+  color: #e14b4b; /* leaderboard red */
+}
+
+/* Add spacing between sidebar tabs and profile card */
+.leaderboard-card {
+  margin-top: 20px;
+}

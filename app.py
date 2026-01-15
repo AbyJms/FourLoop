@@ -77,7 +77,63 @@ def login():
     return jsonify({"ok": True})
 
 # --------------------
-# DATA API
+# STORE API
+# --------------------
+
+@app.get("/api/store")
+def store_data():
+    if "uid" not in session:
+        return jsonify({"error": "Not logged in"}), 401
+
+    cur = mysql.connection.cursor()
+    cur.execute(
+        "SELECT credits FROM users WHERE id=%s",
+        (session["uid"],),
+    )
+    credits = cur.fetchone()[0]
+    cur.close()
+
+    return jsonify({"credits": credits})
+
+
+@app.post("/api/redeem")
+def redeem_item():
+    if "uid" not in session:
+        return jsonify({"error": "Not logged in"}), 401
+
+    cost = request.json.get("cost")
+    if cost is None:
+        return jsonify({"error": "Invalid request"}), 400
+
+    cur = mysql.connection.cursor()
+
+    cur.execute(
+        "SELECT credits FROM users WHERE id=%s",
+        (session["uid"],),
+    )
+    credits = cur.fetchone()[0]
+
+    if credits < cost:
+        cur.close()
+        return jsonify({"error": "Not enough credits"}), 400
+
+    cur.execute(
+        "UPDATE users SET credits = credits - %s WHERE id=%s",
+        (cost, session["uid"]),
+    )
+    mysql.connection.commit()
+
+    cur.execute(
+        "SELECT credits FROM users WHERE id=%s",
+        (session["uid"],),
+    )
+    new_credits = cur.fetchone()[0]
+
+    cur.close()
+    return jsonify({"credits": new_credits})
+
+# --------------------
+# DATA API (dashboard/profile unchanged)
 # --------------------
 
 def compute_rank(cur, total_points):
@@ -93,7 +149,6 @@ def dashboard_data():
         return jsonify({"error": "Not logged in"}), 401
 
     cur = mysql.connection.cursor()
-
     cur.execute("""
         SELECT u.username, u.points, u.credits, u.total_points, t.name
         FROM users u
@@ -104,11 +159,7 @@ def dashboard_data():
 
     rank = compute_rank(cur, u[3])
 
-    # update best rank if needed
-    cur.execute(
-        "SELECT best_rank FROM users WHERE id=%s",
-        (session["uid"],),
-    )
+    cur.execute("SELECT best_rank FROM users WHERE id=%s", (session["uid"],))
     best = cur.fetchone()[0]
 
     if best is None or rank < best:
@@ -152,7 +203,6 @@ def profile_data():
         return jsonify({"error": "Not logged in"}), 401
 
     cur = mysql.connection.cursor()
-
     cur.execute("""
         SELECT u.username, u.points, u.credits, u.total_points, t.name, u.best_rank
         FROM users u

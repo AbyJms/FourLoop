@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+// ================= LOCATION UTILS =================
+>>>>>>> 31502171d08cdc8b8e6e36c7f25152061fa8cd4e
 function updateLocationName(lat, lng) {
   fetch(
     `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`
@@ -10,6 +14,7 @@ function updateLocationName(lat, lng) {
         data.address.city ||
         data.address.town ||
         "Your Area";
+<<<<<<< HEAD
 
       document.getElementById("currentLocation").textContent = place;
     })
@@ -18,210 +23,114 @@ function updateLocationName(lat, lng) {
     });
 }
 
+=======
+>>>>>>> 31502171d08cdc8b8e6e36c7f25152061fa8cd4e
 
-// ================= FORM VALIDATION =================
-
-document.addEventListener("DOMContentLoaded", () => {
-  const form = document.getElementById("studentRegisterForm");
-  if (!form) return;
-
-  const firstNameInput = document.getElementById("firstName");
-  const lastNameInput = document.getElementById("lastName");
-  const usernameInput = document.getElementById("username");
-  const emailInput = document.getElementById("email");
-  const passwordInput = document.getElementById("password");
-  const formMessage = document.getElementById("formMessage");
-
-  const setError = (fieldName, message) => {
-    const el = document.querySelector(`.field-error[data-for="${fieldName}"]`);
-    if (el) el.textContent = message || "";
-  };
-
-  const clearAllErrors = () => {
-    document.querySelectorAll(".field-error").forEach((el) => {
-      el.textContent = "";
+      const el = document.getElementById("currentLocation");
+      if (el) el.textContent = place;
+    })
+    .catch(() => {
+      const el = document.getElementById("currentLocation");
+      if (el) el.textContent = "Location locked";
     });
-    if (formMessage) {
-      formMessage.textContent = "";
-      formMessage.classList.remove("error");
-    }
-  };
+}
 
-  const isValidGmail = (value) =>
-    /^[a-zA-Z0-9._%+-]+@gmail\.com$/.test(value);
-
-  const isValidPassword = (value) =>
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/.test(value);
-
-  form.addEventListener("submit", (event) => {
-    event.preventDefault();
-    clearAllErrors();
-
-    let hasError = false;
-
-    if (!firstNameInput.value.trim()) {
-      setError("firstName", "First name is required.");
-      hasError = true;
-    }
-
-    if (!lastNameInput.value.trim()) {
-      setError("lastName", "Last name is required.");
-      hasError = true;
-    }
-
-    if (!usernameInput.value.trim()) {
-      setError("username", "Username is required.");
-      hasError = true;
-    }
-
-    const emailValue = emailInput.value.trim();
-    if (!emailValue) {
-      setError("email", "Gmail address is required.");
-      hasError = true;
-    } else if (!isValidGmail(emailValue)) {
-      setError(
-        "email",
-        "Please enter a valid Gmail address (ends with @gmail.com)."
-      );
-      hasError = true;
-    }
-
-    const passwordValue = passwordInput.value;
-    if (!passwordValue) {
-      setError("password", "Password is required.");
-      hasError = true;
-    } else if (!isValidPassword(passwordValue)) {
-      setError(
-        "password",
-        "Password must be at least 8 characters and include 1 uppercase, 1 lowercase, 1 number, and 1 symbol."
-      );
-      hasError = true;
-    }
-
-    if (hasError) {
-      if (formMessage) {
-        formMessage.textContent =
-          "Please fix the errors above and try again.";
-        formMessage.classList.add("error");
-      }
-      return;
-    }
-
-    if (formMessage) {
-      formMessage.textContent =
-        "Registration details look good! (Demo only, not submitted.)";
-      formMessage.classList.remove("error");
-    }
-  });
-});
-
+// ================= GEOLOCATION (SAFE) =================
 function getUserLocationOnce(callback) {
   const cached = sessionStorage.getItem("zoneMapUserLocation");
-
-  // 1️⃣ If we already have coords → use them, DO NOTHING ELSE
   if (cached) {
     try {
       const { lat, lng } = JSON.parse(cached);
-      if (typeof lat === "number" && typeof lng === "number") {
-        callback(lat, lng);
-        return; // 🔥 stops everything
-      }
-    } catch (e) { }
+      callback(lat, lng);
+      return;
+    } catch {}
   }
 
-  // 2️⃣ If no cache, check permission state FIRST
-  if (!navigator.permissions || !navigator.geolocation) return;
+  if (!navigator.geolocation) {
+    console.warn("Geolocation not supported");
+    return;
+  }
 
-  navigator.permissions.query({ name: "geolocation" }).then((status) => {
-    if (status.state === "granted") {
-      // permission already granted → safe to ask ONCE
-      navigator.geolocation.getCurrentPosition((pos) => {
-        const lat = pos.coords.latitude;
-        const lng = pos.coords.longitude;
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      const lat = pos.coords.latitude;
+      const lng = pos.coords.longitude;
 
-        sessionStorage.setItem(
-          "zoneMapUserLocation",
-          JSON.stringify({ lat, lng })
-        );
+      sessionStorage.setItem(
+        "zoneMapUserLocation",
+        JSON.stringify({ lat, lng })
+      );
 
-        callback(lat, lng);
-      });
-    } else if (status.state === "prompt") {
-      // first ever ask
-      navigator.geolocation.getCurrentPosition((pos) => {
-        const lat = pos.coords.latitude;
-        const lng = pos.coords.longitude;
-
-        sessionStorage.setItem(
-          "zoneMapUserLocation",
-          JSON.stringify({ lat, lng })
-        );
-
-        callback(lat, lng);
-      });
-    } else {
+      callback(lat, lng);
+    },
+    () => {
       console.warn("Location denied");
-    }
-  });
+    },
+    { enableHighAccuracy: true }
+  );
 }
 
-// ================= ZONE MAP FEATURE =================
-
+// ================= ZONE MAP =================
 document.addEventListener("DOMContentLoaded", () => {
-  const mapContainer = document.getElementById("zoneMap");
-  if (!mapContainer || typeof L === "undefined") return;
+  const mapEl = document.getElementById("zoneMap");
+  if (!mapEl || typeof L === "undefined") return;
 
-  // 🔹 Create map and expose globally (IMPORTANT for tabs)
-  window.zoneMapInstance = L.map("zoneMap", {
+  // Create map
+  window.zoneMap = L.map("zoneMap", {
     zoomControl: false,
     attributionControl: false
   });
 
-  // 🔹 Default OpenStreetMap tiles (normal light map)
+  // Tiles
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    attribution: '&copy; OpenStreetMap contributors',
     maxZoom: 19
-  }).addTo(window.zoneMapInstance);
+  }).addTo(window.zoneMap);
 
-  // 🔹 Fullscreen toggle
-  const mapWrapper = mapContainer.closest(".map-wrapper");
-  const fullscreenBtn = mapWrapper?.querySelector(".map-fullscreen-btn");
+  // Fallback view (before GPS)
+  window.zoneMap.setView([10.5276, 76.2144], 14);
 
-  const applySizeFix = () => {
-    if (window.zoneMapInstance) {
-      setTimeout(() => window.zoneMapInstance.invalidateSize(), 150);
-    }
-  };
+  // ================= FULLSCREEN =================
+  const wrapper = mapEl.closest(".map-wrapper");
+  const fsBtn = wrapper?.querySelector(".map-fullscreen-btn");
 
-  const toggleFullscreen = () => {
-    if (!mapWrapper) return;
-    const isActive = mapWrapper.classList.toggle("is-fullscreen");
-    if (fullscreenBtn) {
-      fullscreenBtn.textContent = isActive ? "Exit Fullscreen" : "Fullscreen";
-    }
-    applySizeFix();
-  };
+  fsBtn?.addEventListener("click", () => {
+    wrapper.classList.toggle("is-fullscreen");
+    fsBtn.textContent = wrapper.classList.contains("is-fullscreen")
+      ? "Exit Fullscreen"
+      : "Fullscreen";
 
-  if (fullscreenBtn) {
-    fullscreenBtn.addEventListener("click", toggleFullscreen);
-  }
+    setTimeout(() => window.zoneMap.invalidateSize(), 200);
+  });
 
+<<<<<<< HEAD
   const locationEl = document.getElementById("currentLocation");
 
   getUserLocationOnce((lat, lng) => {
     // Center map
     window.zoneMapInstance.setView([lat, lng], 15);
+=======
+  // ================= USER LOCATION =================
+  getUserLocationOnce((lat, lng) => {
+    window.zoneMap.setView([lat, lng], 15);
+>>>>>>> 31502171d08cdc8b8e6e36c7f25152061fa8cd4e
 
     // User marker
     const userIcon = L.icon({
+<<<<<<< HEAD
       iconUrl: "you.jpg",
       iconSize: [36, 36],
       iconAnchor: [18, 18],
       popupAnchor: [0, -18],
+=======
+      iconUrl: "/static/you.jpg",
+      iconSize: [38, 38],
+      iconAnchor: [19, 19],
+>>>>>>> 31502171d08cdc8b8e6e36c7f25152061fa8cd4e
       className: "user-map-icon"
     });
 
     L.marker([lat, lng], { icon: userIcon })
+<<<<<<< HEAD
       .addTo(window.zoneMapInstance)
       .bindPopup("You are here");
 
@@ -230,16 +139,23 @@ document.addEventListener("DOMContentLoaded", () => {
       locationEl.textContent = "Location locked";
     }
   });
+=======
+      .addTo(window.zoneMap)
+      .bindPopup("You are here");
+>>>>>>> 31502171d08cdc8b8e6e36c7f25152061fa8cd4e
 
-  // Fixed demogarbage icon (large, no outline, cannot be moved by players)
-  const demoGarbageIcon = L.icon({
-    iconUrl: "demogarbage.jpeg",
+    updateLocationName(lat, lng);
+  });
+
+  // ================= DEMO GARBAGE =================
+  const garbageIcon = L.icon({
+    iconUrl: "/static/demogarbage.jpeg",
     iconSize: [72, 72],
     iconAnchor: [36, 36],
-    popupAnchor: [0, -36],
     className: "demogarbage-icon"
   });
 
+<<<<<<< HEAD
   // Default fallback view
   window.zoneMapInstance.setView([10.5276, 76.2144], 14);
 
@@ -278,11 +194,25 @@ document.addEventListener("DOMContentLoaded", () => {
       color: "rgba(255, 80, 80, 0.6)",
       fillColor: "rgba(255, 80, 80, 0.25)",
       fillOpacity: 0.4,
-      weight: 2,
-      interactive: false,
-      className: "danger-pulse"
-    }).addTo(window.zoneMapInstance);
+=======
+  const bosses = [
+    { name: "Demo-garbage", coords: [10.350078, 76.248586] },
+    { name: "Demo-garbage (East)", coords: [10.350078, 76.278586] }
+  ];
 
+  bosses.forEach(boss => {
+    // Danger pulse
+    L.circle(boss.coords, {
+      radius: 420,
+      color: "rgba(255,80,80,0.6)",
+      fillColor: "rgba(255,80,80,0.25)",
+>>>>>>> 31502171d08cdc8b8e6e36c7f25152061fa8cd4e
+      weight: 2,
+      className: "danger-pulse",
+      interactive: false
+    }).addTo(window.zoneMap);
+
+<<<<<<< HEAD
     const marker = L.marker(boss.coords, { icon: demoGarbageIcon })
       .addTo(window.zoneMapInstance)
       .bindPopup(boss.name);
@@ -356,3 +286,11 @@ function updateBossPanel(boss) {
 }
 
 
+=======
+    // Marker
+    L.marker(boss.coords, { icon: garbageIcon })
+      .addTo(window.zoneMap)
+      .bindPopup(boss.name);
+  });
+});
+>>>>>>> 31502171d08cdc8b8e6e36c7f25152061fa8cd4e

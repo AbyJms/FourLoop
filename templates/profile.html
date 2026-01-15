@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Profile</title>
+  <title>Trash Dash - Profile</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
@@ -20,22 +20,47 @@
     <a class="tab-button" href="/store">Redeem Store</a>
   </aside>
 
-  <section class="content profile-content">
+  <section class="card leaderboard-card">
     <div class="profile-card">
 
       <div class="profile-header">
-        <h2 class="profile-username">Username</h2>
+        <h2 class="profile-username">Retrieving Data...</h2>
         <div class="current-title">
-          Current Title: <span>—</span>
+          Current Title: <span>Retrieving Data...</span>
         </div>
       </div>
 
-      <div class="title-badge">
-        Credits: 0<br>
-        Points: 0<br>
-        Lifetime Points: 0<br>
-        Rank: 0<br>
-        Best Rank: 0
+      <!-- STATS BLOCK -->
+      <div class="profile-stats">
+        <div class="stat-row">
+          <span class="stat-label">USERNAME:</span>
+          <span class="stat-value" id="stat-username">Retrieving Data...</span>
+        </div>
+
+        <div class="stat-row">
+          <span class="stat-label">CREDITS:</span>
+          <span class="stat-value" id="stat-credits">Retrieving Data...</span>
+        </div>
+
+        <div class="stat-row">
+          <span class="stat-label">POINTS:</span>
+          <span class="stat-value" id="stat-points">Retrieving Data...</span>
+        </div>
+
+        <div class="stat-row">
+          <span class="stat-label">LIFE-TIME POINTS:</span>
+          <span class="stat-value" id="stat-total-points">Retrieving Data...</span>
+        </div>
+
+        <div class="stat-row">
+          <span class="stat-label">RANK:</span>
+          <span class="stat-value" id="stat-rank">Retrieving Data...</span>
+        </div>
+
+        <div class="stat-row">
+          <span class="stat-label">BEST-RANK:</span>
+          <span class="stat-value" id="stat-best-rank">Retrieving Data...</span>
+        </div>
       </div>
 
     </div>

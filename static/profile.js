@@ -10,10 +10,10 @@
   document.querySelector(".profile-username").textContent = u.username;
   document.querySelector(".current-title span").textContent = u.title || "—";
 
-  document.querySelector(".title-badge").innerHTML =
-    `Credits: ${u.credits}<br>` +
-    `Points: ${u.points}<br>` +
-    `Lifetime Points: ${u.total_points}<br>` +
-    `Rank: ${u.rank}<br>` +
-    `Best Rank: ${u.best_rank}`;
+  document.getElementById("stat-username").textContent = u.username;
+  document.getElementById("stat-credits").textContent = u.credits;
+  document.getElementById("stat-points").textContent = u.points;
+  document.getElementById("stat-total-points").textContent = u.total_points;
+  document.getElementById("stat-rank").textContent = u.rank;
+  document.getElementById("stat-best-rank").textContent = u.best_rank;
 })();
