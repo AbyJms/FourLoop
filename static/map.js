@@ -356,27 +356,3 @@ function updateBossPanel(boss) {
 }
 
 
-getUserLocationOnce((lat, lng) => {
-  // center the map
-  window.zoneMapInstance.setView([lat, lng], 15);
-
-  // add user marker
-  const userIcon = L.icon({
-    iconUrl: "you.jpg",
-    iconSize: [36, 36],
-    iconAnchor: [18, 18],
-    popupAnchor: [0, -18],
-    className: "user-map-icon"
-  });
-
-  L.marker([lat, lng], { icon: userIcon })
-    .addTo(window.zoneMapInstance)
-    .bindPopup("You are here");
-
-  // update text
-  const el = document.getElementById("currentLocation");
-  if (el) {
-    el.textContent = "Location locked";
-  }
-});
-
