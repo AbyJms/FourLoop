@@ -1,44 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Trash Dash - Profile</title>
+<head>
+  <meta charset="UTF-8" />
+  <title>Profile</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
 
-    <!-- Main CSS -->
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='style.css') }}"
-    />
-  </head>
+<header class="topbar">
+  <div class="logo">STRANGER TRASH</div>
+  <button class="logout">Logout</button>
+</header>
 
-  <body>
-    <header class="topbar">
-      <div class="logo">STRANGER TRASH</div>
-      <button class="logout">Logout</button>
-    </header>
+<main class="main-layout">
+  <aside class="sidebar">
+    <a class="tab-button" href="/dashboard">Dashboard</a>
+    <a class="tab-button" href="/mission">Missions</a>
+    <a class="tab-button active" href="/profile">Profile</a>
+    <a class="tab-button" href="/store">Redeem Store</a>
+  </aside>
 
-    <main class="main-layout">
-      <nav class="tabs">
-        <a class="tab-button" href="/dashboard">Dashboard</a>
-        <a class="tab-button" href="/mission">Missions</a>
-        <a class="tab-button active" href="/profile">Profile</a>
-        <a class="tab-button" href="/store">Redeem Store</a>
-      </nav>
+  <section class="content profile-content">
+    <div class="profile-card">
 
-      <section id="profile" aria-label="Player profile">
-        <section class="profile-header card">
-          <div class="profile-main">
-            <div class="avatar-placeholder" aria-label="Player avatar"></div>
-            <div>
-              <p class="section-label">USERNAME</p>
-              <h2 class="profile-username">NeonVanguard</h2>
-              <p class="current-title">
-                Current Title: <span>Emperor of Wastefront</span>
-              </p>
-              <p class="title-badge">King • Queen • Emperor • Empress</p>
-            </div>
-          </div>
+      <div class="profile-header">
+        <h2 class="profile-username">Username</h2>
+        <div class="current-title">
+          Current Title: <span>—</span>
+        </div>
+      </div>
 
-          <div class="profile-actions">
-            <button class="primary-btn">Profile</button>
-            <button class="secondary-btn">Logout</b
+      <div class="title-badge">
+        Credits: 0<br>
+        Points: 0<br>
+        Lifetime Points: 0<br>
+        Rank: 0<br>
+        Best Rank: 0
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<script src="{{ url_for('static', filename='profile.js') }}"></script>
+</body>
+</html>

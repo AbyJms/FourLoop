@@ -80,6 +80,13 @@ def login():
 # DATA API
 # --------------------
 
+def compute_rank(cur, total_points):
+    cur.execute(
+        "SELECT COUNT(*) + 1 FROM users WHERE total_points > %s",
+        (total_points,),
+    )
+    return cur.fetchone()[0]
+
 @app.get("/api/dashboard")
 def dashboard_data():
     if "uid" not in session:
@@ -87,7 +94,6 @@ def dashboard_data():
 
     cur = mysql.connection.cursor()
 
-    # User info + title
     cur.execute("""
         SELECT u.username, u.points, u.credits, u.total_points, t.name
         FROM users u
@@ -96,7 +102,23 @@ def dashboard_data():
     """, (session["uid"],))
     u = cur.fetchone()
 
-    # Leaderboard (top 10)
+    rank = compute_rank(cur, u[3])
+
+    # update best rank if needed
+    cur.execute(
+        "SELECT best_rank FROM users WHERE id=%s",
+        (session["uid"],),
+    )
+    best = cur.fetchone()[0]
+
+    if best is None or rank < best:
+        cur.execute(
+            "UPDATE users SET best_rank=%s WHERE id=%s",
+            (rank, session["uid"]),
+        )
+        mysql.connection.commit()
+        best = rank
+
     cur.execute("""
         SELECT username, total_points
         FROM users
@@ -104,14 +126,6 @@ def dashboard_data():
         LIMIT 10
     """)
     leaderboard = cur.fetchall()
-
-    # Rank
-    cur.execute("""
-        SELECT COUNT(*) + 1
-        FROM users
-        WHERE total_points > %s
-    """, (u[3],))
-    rank = cur.fetchone()[0]
 
     cur.close()
 
@@ -122,7 +136,8 @@ def dashboard_data():
             "credits": u[2],
             "total_points": u[3],
             "title": u[4],
-            "rank": rank
+            "rank": rank,
+            "best_rank": best
         },
         "leaderboard": [
             {"username": r[0], "points": r[1]} for r in leaderboard
@@ -137,30 +152,37 @@ def profile_data():
         return jsonify({"error": "Not logged in"}), 401
 
     cur = mysql.connection.cursor()
+
     cur.execute("""
-        SELECT u.username, u.points, u.credits, u.total_points, t.name
+        SELECT u.username, u.points, u.credits, u.total_points, t.name, u.best_rank
         FROM users u
         LEFT JOIN titles t ON u.title_id = t.id
         WHERE u.id = %s
     """, (session["uid"],))
     u = cur.fetchone()
 
-    cur.execute("""
-        SELECT COUNT(*) + 1
-        FROM users
-        WHERE total_points > %s
-    """, (u[3],))
-    rank = cur.fetchone()[0]
+    rank = compute_rank(cur, u[3])
+
+    if u[5] is None or rank < u[5]:
+        cur.execute(
+            "UPDATE users SET best_rank=%s WHERE id=%s",
+            (rank, session["uid"]),
+        )
+        mysql.connection.commit()
+        best = rank
+    else:
+        best = u[5]
 
     cur.close()
 
     return jsonify({
         "username": u[0],
-        "points": u[1],
-        "credits": u[2],
-        "total_points": u[3],
         "title": u[4],
-        "rank": rank
+        "points": u[1],
+        "total_points": u[3],
+        "credits": u[2],
+        "rank": rank,
+        "best_rank": best
     })
 
 if __name__ == "__main__":

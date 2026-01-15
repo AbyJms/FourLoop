@@ -13,5 +13,7 @@
   document.querySelector(".title-badge").innerHTML =
     `Credits: ${u.credits}<br>` +
     `Points: ${u.points}<br>` +
-    `Rank: ${u.rank}`;
+    `Lifetime Points: ${u.total_points}<br>` +
+    `Rank: ${u.rank}<br>` +
+    `Best Rank: ${u.best_rank}`;
 })();
