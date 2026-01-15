@@ -1212,3 +1212,8 @@ body {
 .stat-value {
   color: #e14b4b; /* leaderboard red */
 }
+
+/* Add spacing between sidebar tabs and profile card */
+.leaderboard-card {
+  margin-top: 20px;
+}

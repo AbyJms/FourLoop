@@ -1,25 +1,39 @@
-let points = 8000;
-const owned = {
-  "free-bus": 0,
-  "bus-discount": 0,
-  "train-discount": 0,
-  "electricity": 0,
-  "ration": 0
-};
+let credits = 0;
+
+async function loadCredits() {
+  const res = await fetch("/api/store", { credentials: "include" });
+  if (!res.ok) return;
+
+  const data = await res.json();
+  credits = data.credits;
+  document.getElementById("storePoints").textContent = credits;
+}
+
+async function redeem(cost) {
+  const res = await fetch("/api/redeem", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({ cost })
+  });
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    alert(data.error);
+    return;
+  }
+
+  credits = data.credits;
+  document.getElementById("storePoints").textContent = credits;
+}
 
 document.querySelectorAll(".redeem-btn").forEach(btn => {
   btn.addEventListener("click", () => {
     const card = btn.closest(".store-card");
-    const id = card.dataset.id;
     const cost = Number(card.dataset.cost);
-
-    if (points < cost) return;
-    if (owned[id] >= 2) return;
-
-    points -= cost;
-    owned[id]++;
-
-    document.getElementById("storePoints").textContent = points;
-    document.getElementById(`${id}-owned`).textContent = owned[id];
+    redeem(cost);
   });
 });
+
+loadCredits();
