@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <title>Trash Dash Dashboard</title>
+
+    <!-- Main Styles -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+
+    <!-- Leaflet CSS -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet/dist/leaflet.css"
+    />
+  </head>
+
+  <body>
+    <header class="topbar">
+      <div class="logo">STRANGER TRASH</div>
+      <button class="logout">Logout</button>
+    </header>
+
+    <div
+      id="dashboardMessage"
+      class="dashboard-message"
+      role="alert"
+      aria-live="polite"
+    ></div>
+
+    <main class="main-layout">
+      <nav class="tabs">
+        <a class="tab-button active" href="/dashboard">Dashboard</a>
+        <a class="tab-button" href="/mission">Missions</a>
+        <a class="tab-button" href="/profile">Profile</a>
+        <a class="tab-button" href="/store">Redeem Store</a>
+      </nav>
+
+      <section id="dashboard" class="tab-content active">

@@ -9,7 +9,8 @@
 
     <!-- Main Styles -->
 
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
 
     <!-- Leaflet CSS (map styling only, logic later) -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
@@ -23,10 +24,10 @@
 
     <main class="main-layout">
       <nav class="tabs">
-        <a class="tab-button active" href="dashboard.html">Dashboard</a>
-        <a class="tab-button" href="mission.html">Missions</a>
-        <a class="tab-button" href="profile.html">Profile</a>
-        <a class="tab-button" href="store.html">Redeem Store</a>
+        <a class="tab-button active" href="/dashboard">Dashboard</a>
+        <a class="tab-button" href="/mission">Missions</a>
+        <a class="tab-button" href="/profile">Profile</a>
+        <a class="tab-button" href="/store">Redeem Store</a>
       </nav>
       
 
@@ -142,62 +143,27 @@
             </section>
 
             <section class="card leaderboard-card">
-              <div class="leaderboard-columns">
-                <div>
-                  <h3>Zonal Leaderboard</h3>
-                  <ol class="leaderboard-list">
-                    <li>
-                      <span>Crimson Sweepers</span
-                      ><span class="score">12,340 pts</span>
-                    </li>
-                    <li>
-                      <span>Neon Nomads</span
-                      ><span class="score">11,980 pts</span>
-                    </li>
-                    <li>
-                      <span>Waste Warriors</span
-                      ><span class="score">10,420 pts</span>
-                    </li>
-                  </ol>
-                </div>
                 <div>
                   <h3>National Leaderboard</h3>
                   <ol class="leaderboard-list">
                     <li>
-                      <span>Empire of Clean</span
-                      ><span class="score">120,450 pts</span>
+                      <span>Retrieving Data...</span
+                      ><span class="score">Retrieving Data...</span>
                     </li>
                     <li>
-                      <span>Redline Reclaimers</span
-                      ><span class="score">118,900 pts</span>
+                      <span>Retrieving Data...</span
+                      ><span class="score">Retrieving Data...</span>
                     </li>
                     <li>
-                      <span>ZeroWaste Union</span
-                      ><span class="score">115,320 pts</span>
+                      <span>Retrieving Data...</span
+                      ><span class="score">Retrieving Data...</span>
                     </li>
                   </ol>
                 </div>
               </div>
-              <div class="center">
-                <button class="leaderboard">View Full Leaderboard</button>
-              </div>
             </section>
 
             <!-- Mission card (Playful Impact removed) -->
-            <section class="card mission-card">
-              <h3>Active Missions</h3>
-              <h2 class="mission-title">Trash Dash</h2>
-              <p class="mission-text">
-
-            <section class="card">
-              <h3>Your Mission</h3>
-              <h2>Trash Dash</h2>
-              <p>
-                Clean the city and defeat the garbage monsters.
-              </p>
-            </section>
-          </div>
-        </section>
       </section>
 
     </main>
@@ -235,8 +201,8 @@
 
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
-    <script src="dashboard.js"></script>
-    <script src="map.js"></script>
+    <script src="{{ url_for('static', filename='dashboard.js') }}"></script>
+    <script src="{{ url_for('static', filename='map.js') }}"></script>
   </body>
 </html>
 

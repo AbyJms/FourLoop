@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Stranger Trash – Active Jobs</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
 </head>
 <body>
 
@@ -14,19 +14,16 @@
 
 <main class="main-layout">
 
-  <!-- NAV -->
   <nav class="tabs">
-    <a class="tab-button" href="seeker-dashboard.html">Dashboard</a>
-    <a class="tab-button" href="seeker-post.html">Post Jobs</a>
-    <a class="tab-button active" href="seeker-job.html">Active Jobs</a>
+    <a class="tab-button" href="/seeker/dashboard">Dashboard</a>
+    <a class="tab-button" href="/seeker/post">Post Jobs</a>
+    <a class="tab-button active" href="/seeker/jobs">Active Jobs</a>
   </nav>
 
-  <!-- ACTIVE JOBS LIST -->
   <section class="card spacious">
 
     <h2>Active Community Jobs</h2>
 
-    <!-- JOB CARD -->
     <section class="card job-card">
       <div class="job-header">
         <h3>Plastic Hotspot Cleanup</h3>
@@ -64,7 +61,6 @@
       </div>
     </section>
 
-    <!-- JOB CARD -->
     <section class="card job-card">
       <div class="job-header">
         <h3>Drain Clearing Operation</h3>
@@ -83,6 +79,7 @@
         <div>
           <span class="meta-label">Duration</span>
           <span class="meta-value">2 hrs</span>
+<<<<<<< HEAD:seeker-job.html
         </div>
         <div>
           <span class="meta-label">Tokens</span>
@@ -103,8 +100,12 @@
     </section>
 
   </section>
+  <script src="seeker-auth.js"></script>
 
 </main>
 
 </body>
 </html>
+=======
+        </div
+>>>>>>> origin/main:templates/seeker-job.html

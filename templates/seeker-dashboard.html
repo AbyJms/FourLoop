@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Stranger Trash – Seeker Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+
+<header class="topbar">
+  <div class="logo">STRANGER TRASH <span class="role-tag">SEEKER</span></div>
+  <button class="logout">Logout</button>
+</header>
+
+<main class="main-layout">
+
+  <nav class="tabs">
+    <a class="tab-button active" href="/seeker/dashboard">Dashboard</a>
+    <a class="tab-button" href="/seeker/post">Post Jobs</a>
+    <a class="tab-button" href="/seeker/jobs"

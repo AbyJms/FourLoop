@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Trash Dash – Redeem Store</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 
@@ -14,10 +14,10 @@
 
 <main class="main-layout">
   <nav class="tabs">
-    <a class="tab-button" href="dashboard.html">Dashboard</a>
-    <a class="tab-button" href="mission.html">Missions</a>
-    <a class="tab-button" href="profile.html">Profile</a>
-    <a class="tab-button active" href="store.html">Redeem Store</a>
+    <a class="tab-button" href="/dashboard">Dashboard</a>
+    <a class="tab-button" href="/mission">Missions</a>
+    <a class="tab-button" href="/profile">Profile</a>
+    <a class="tab-button active" href="/store">Redeem Store</a> 
   </nav>
 
   <!-- STORE HEADER -->
@@ -79,6 +79,6 @@
   </section>
 </main>
 
-<script src="store.js"></script>
+<script src="{{ url_for('static', filename='store.js') }}"></script>
 </body>
 </html>

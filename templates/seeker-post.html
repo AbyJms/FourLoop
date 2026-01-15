@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Stranger Trash – Post Job</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+
+<header class="topbar">
+  <div class="logo">STRANGER TRASH <span class="role-tag">SEEKER</span></div>
+  <button class="logout">Logout</button>
+</header>
+
+<main class="main-layout">
+
+  <nav class="tabs">
+    <a class="tab-button" href="/seeker/dashboard">Dashboard</a>
+    <a class="tab-button active" href="/seeker/post">Post Jobs</a>
+    <a class="tab-button" href="/seeker/jobs">Active Jobs</a>
+  </nav>
+
+  <section class="card spacious post-job-card">
+
+    <h2>Post Community Job</h2>
+
+    <form class="auth-form" autocomplete="off">
+
+      <!-- JOB BASICS -->

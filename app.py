@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 from flask import Flask, request, jsonify, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
@@ -98,15 +99,15 @@ from flask_jwt_extended import JWTManager
 from config import config
 from models import db
 >>>>>>> 04da2d01ffe9acadffbb6189fda4a30b9b647ac9
+=======
+from flask import Flask, request, jsonify, session, render_template, redirect
+from db import mysql, init_db
+>>>>>>> 8ac7fcc27165ea9f44469c6e45197487dbc9ff35
 
-# Import blueprints
-from routes.auth import auth_bp
-from routes.users import users_bp
-from routes.reports import reports_bp
-from routes.collections import collections_bp
-from routes.store import store_bp
-from routes.leaderboard import leaderboard_bp
+app = Flask(__name__, static_folder="static", template_folder="templates")
+app.secret_key = "trash-secret-key"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 @app.route("/api/auth/login", methods=["POST"])
 def login():
@@ -197,3 +198,188 @@ if __name__ == '__main__':
     app = create_app(os.environ.get('FLASK_ENV', 'development'))
     app.run(debug=True, host='0.0.0.0', port=5000)
 >>>>>>> 04da2d01ffe9acadffbb6189fda4a30b9b647ac9
+=======
+init_db(app)
+
+# --------------------
+# PAGES
+# --------------------
+
+@app.get("/")
+def auth_page():
+    return render_template("auth.html")
+
+@app.get("/dashboard")
+def dashboard_page():
+    if "uid" not in session:
+        return redirect("/")
+    return render_template("dashboard.html")
+
+@app.get("/mission")
+def mission_page():
+    if "uid" not in session:
+        return redirect("/")
+    return render_template("mission.html")
+
+@app.get("/profile")
+def profile_page():
+    if "uid" not in session:
+        return redirect("/")
+    return render_template("profile.html")
+
+@app.get("/store")
+def store_page():
+    if "uid" not in session:
+        return redirect("/")
+    return render_template("store.html")
+
+@app.post("/logout")
+def logout():
+    session.clear()
+    return jsonify({"ok": True})
+
+# --------------------
+# AUTH
+# --------------------
+
+@app.post("/register")
+def register():
+    data = request.json
+    cur = mysql.connection.cursor()
+    cur.execute(
+        "INSERT INTO users (username, email, password) VALUES (%s,%s,%s)",
+        (data["username"], data["email"], data["password"]),
+    )
+    mysql.connection.commit()
+    cur.close()
+    return jsonify({"ok": True})
+
+@app.post("/login")
+def login():
+    data = request.json
+    cur = mysql.connection.cursor()
+    cur.execute(
+        "SELECT id FROM users WHERE username=%s AND password=%s",
+        (data["username"], data["password"]),
+    )
+    row = cur.fetchone()
+    cur.close()
+
+    if not row:
+        return jsonify({"error": "Invalid credentials"}), 401
+
+    session["uid"] = row[0]
+    return jsonify({"ok": True})
+
+# --------------------
+# DATA API
+# --------------------
+
+def compute_rank(cur, total_points):
+    cur.execute(
+        "SELECT COUNT(*) + 1 FROM users WHERE total_points > %s",
+        (total_points,),
+    )
+    return cur.fetchone()[0]
+
+@app.get("/api/dashboard")
+def dashboard_data():
+    if "uid" not in session:
+        return jsonify({"error": "Not logged in"}), 401
+
+    cur = mysql.connection.cursor()
+
+    cur.execute("""
+        SELECT u.username, u.points, u.credits, u.total_points, t.name
+        FROM users u
+        LEFT JOIN titles t ON u.title_id = t.id
+        WHERE u.id = %s
+    """, (session["uid"],))
+    u = cur.fetchone()
+
+    rank = compute_rank(cur, u[3])
+
+    # update best rank if needed
+    cur.execute(
+        "SELECT best_rank FROM users WHERE id=%s",
+        (session["uid"],),
+    )
+    best = cur.fetchone()[0]
+
+    if best is None or rank < best:
+        cur.execute(
+            "UPDATE users SET best_rank=%s WHERE id=%s",
+            (rank, session["uid"]),
+        )
+        mysql.connection.commit()
+        best = rank
+
+    cur.execute("""
+        SELECT username, total_points
+        FROM users
+        ORDER BY total_points DESC
+        LIMIT 10
+    """)
+    leaderboard = cur.fetchall()
+
+    cur.close()
+
+    return jsonify({
+        "user": {
+            "username": u[0],
+            "points": u[1],
+            "credits": u[2],
+            "total_points": u[3],
+            "title": u[4],
+            "rank": rank,
+            "best_rank": best
+        },
+        "leaderboard": [
+            {"username": r[0], "points": r[1]} for r in leaderboard
+        ],
+        "currentZone": "Crimson Wastefront",
+        "boss": {"name": "Demo-garbage", "hp": 42}
+    })
+
+@app.get("/api/profile")
+def profile_data():
+    if "uid" not in session:
+        return jsonify({"error": "Not logged in"}), 401
+
+    cur = mysql.connection.cursor()
+
+    cur.execute("""
+        SELECT u.username, u.points, u.credits, u.total_points, t.name, u.best_rank
+        FROM users u
+        LEFT JOIN titles t ON u.title_id = t.id
+        WHERE u.id = %s
+    """, (session["uid"],))
+    u = cur.fetchone()
+
+    rank = compute_rank(cur, u[3])
+
+    if u[5] is None or rank < u[5]:
+        cur.execute(
+            "UPDATE users SET best_rank=%s WHERE id=%s",
+            (rank, session["uid"]),
+        )
+        mysql.connection.commit()
+        best = rank
+    else:
+        best = u[5]
+
+    cur.close()
+
+    return jsonify({
+        "username": u[0],
+        "title": u[4],
+        "points": u[1],
+        "total_points": u[3],
+        "credits": u[2],
+        "rank": rank,
+        "best_rank": best
+    })
+
+if __name__ == "__main__":
+    app.run(debug=True)
+>>>>>>> 8ac7fcc27165ea9f44469c6e45197487dbc9ff35

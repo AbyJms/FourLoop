@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Profile</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="logo">STRANGER TRASH</div>
+  <button class="logout">Logout</button>
+</header>
+
+<main class="main-layout">
+  <aside class="sidebar">
+    <a class="tab-button" href="/dashboard">Dashboard</a>
+    <a class="tab-button" href="/mission">Missions</a>
+    <a class="tab-button active" href="/profile">Profile</a>
+    <a class="tab-button" href="/store">Redeem Store</a>
+  </aside>
+
+  <section class="content profile-content">
+    <div class="profile-card">
+
+      <div class="profile-header">
+        <h2 class="profile-username">Username</h2>
+        <div class="current-title">
+          Current Title: <span>—</span>
+        </div>
+      </div>
+
+      <div class="title-badge">
+        Credits: 0<br>
+        Points: 0<br>
+        Lifetime Points: 0<br>
+        Rank: 0<br>
+        Best Rank: 0
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<script src="{{ url_for('static', filename='profile.js') }}"></script>
+</body>
+</html>

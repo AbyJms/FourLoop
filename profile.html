@@ -25,10 +25,14 @@
             <div class="avatar-placeholder" aria-label="Player avatar"></div>
             <div>
               <p class="section-label">USERNAME</p>
-              <h2 class="profile-username">NeonVanguard</h2>
+              <h2 id="profile-username">—</h2>
               <p class="current-title">
-                Current Title: <span>Emperor of Wastefront</span>
+              Email: <span id="profile-email">—</span>
               </p>
+              <p class="title-badge">
+                Type: <span id="profile-type">—</span>
+              </p>
+
               <p class="title-badge">King • Queen • Emperor • Empress</p>
             </div>
           </div>
@@ -44,19 +48,14 @@
             <div class="stats-grid">
               <div>
                 <p class="stat-label">Total lifetime points</p>
-                <p class="stat-value">154,230</p>
+                <p class="stat-value" id="profile-points">—</p>
               </div>
-              <div>
-                <p class="stat-label">Current cycle points</p>
-                <p class="stat-value">8,420</p>
-              </div>
+
               <div>
                 <p class="stat-label">Damage contributed</p>
                 <p class="stat-value">2.4M HP</p>
               </div>
               <div>
-                <p class="stat-label">Zones participated</p>
-                <p class="stat-value">18</p>
               </div>
             </div>
           </section>
@@ -109,6 +108,7 @@
         </section>
       </section>
     </main>
+    <script src="profile.js"></script>
   </body>
 </html>
 
