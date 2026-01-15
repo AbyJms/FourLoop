@@ -3,19 +3,17 @@
   <head>
     <meta charset="UTF-8" />
 
+    <title>Trash Dash - Dashboard</title>
+
     <title>Trash Dash Dashboard</title>
 
     <!-- Main Styles -->
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='style.css') }}"
-    />
 
-    <!-- Leaflet CSS -->
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/leaflet/dist/leaflet.css"
-    />
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+
+    <!-- Leaflet CSS (map styling only, logic later) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   </head>
 
   <body>
@@ -24,13 +22,6 @@
       <button class="logout">Logout</button>
     </header>
 
-    <div
-      id="dashboardMessage"
-      class="dashboard-message"
-      role="alert"
-      aria-live="polite"
-    ></div>
-
     <main class="main-layout">
       <nav class="tabs">
         <a class="tab-button active" href="/dashboard">Dashboard</a>
@@ -38,5 +29,194 @@
         <a class="tab-button" href="/profile">Profile</a>
         <a class="tab-button" href="/store">Redeem Store</a>
       </nav>
+      
 
+
+      <section
+        id="dashboard"
+        class="tab-content active"
+        aria-label="Game dashboard"
+      >
+
+      <!-- DASHBOARD TAB -->
       <section id="dashboard" class="tab-content active">
+
+        <section class="dashboard-grid">
+          <!-- LEFT -->
+          <div class="dashboard-left">
+            <!-- ZONE MAP CARD -->
+            <section class="card map-card">
+              <h3>Zone Overview</h3>
+              <p class="zone-name">
+                Current Zone: <span>Crimson Wastefront</span>
+              </p>
+
+              <!-- MAP WRAPPER -->
+              <div class="map-wrapper">
+                <button class="map-fullscreen-btn" type="button" aria-label="Toggle fullscreen">
+                  Fullscreen
+                </button>
+                <!-- ACTUAL MAP CONTAINER (NEW) -->
+                <div
+                  id="zoneMap"
+                  class="zone-map-canvas"
+                  data-zone="crimson-wastefront"
+                  data-map-type="game-zone"
+                  aria-label="Interactive zone map"
+                ></div>
+
+                <!-- Stranger Things overlay effect -->
+                <div class="map-overlay"></div>
+
+                <!-- Overlay label -->
+                <div class="map-label">ZONE MAP</div>
+
+                <!-- Legend -->
+                <div class="map-legend">
+                  <span class="dot main"></span> Main
+                  <span class="dot side"></span> Side
+                  <span class="dot completed"></span> Done
+                </div>
+              </div>
+
+              <!-- Filters -->
+              <div class="map-filters">
+                <label><input type="checkbox" checked /> Main quests</label>
+                <label><input type="checkbox" checked /> Side quests</label>
+                <label><input type="checkbox" checked /> Completed</label>
+              </div>
+            </section>
+
+            <!-- BOSS + QUESTS -->
+            <section class="card boss-and-quests">
+              <div class="boss-header">
+                <div>
+                  <p class="section-label">ACTIVE BOSS</p>
+                  <h2 class="boss-name"> Demo-garbage</h2>
+                </div>
+                <div class="boss-meta">
+                  <p>Zone: <span>Crimson Wastefront</span></p>
+                  <p>Cycle: <span>Nightfall Raid</span></p>
+                </div>
+              </div>
+
+              <div class="hp-bar-wrapper">
+                <div class="hp-bar-label">
+                  <span>Boss HP</span>
+                  <span>42% remaining</span>
+                </div>
+                <div class="hp-bar">
+                  <div class="hp-bar-inner" style="width: 42%"></div>
+                </div>
+              </div>
+
+              <div class="cycle-timer-inline">
+                <span class="label">Time remaining this cycle:</span>
+                <span class="cycle-time">23:12:55</span>
+              </div>
+            </section>
+          </div>
+
+          <div class="dashboard-right">
+            <section class="card party-card">
+              <div class="card-header-row">
+                <h3>Party / Collaborate</h3>
+                <button class="tiny-btn">Invite</button>
+              </div>
+              <ul class="party-list">
+                <li>
+                  <span class="party-name">EchoRanger</span>
+                  <span class="party-role">Squad Lead</span>
+                  <span class="party-status online">Online</span>
+                </li>
+                <li>
+                  <span class="party-name">NeonRecycler</span>
+                  <span class="party-role">Scout</span>
+                  <span class="party-status ingame">In Run</span>
+                </li>
+                <li>
+                  <span class="party-name">GlassKnight</span>
+                  <span class="party-role">Heavy Lifter</span>
+                  <span class="party-status offline">Offline</span>
+                </li>
+              </ul>
+            </section>
+
+            <section class="card leaderboard-card">
+                <div>
+                  <h3>National Leaderboard</h3>
+                  <ol class="leaderboard-list">
+                    <li>
+                      <span>Empire of Clean</span
+                      ><span class="score">120,450 pts</span>
+                    </li>
+                    <li>
+                      <span>Redline Reclaimers</span
+                      ><span class="score">118,900 pts</span>
+                    </li>
+                    <li>
+                      <span>ZeroWaste Union</span
+                      ><span class="score">115,320 pts</span>
+                    </li>
+                  </ol>
+                </div>
+              </div>
+            </section>
+
+            <!-- Mission card (Playful Impact removed) -->
+            <section class="card mission-card">
+              <h3>Active Missions</h3>
+              <h2 class="mission-title">Trash Dash</h2>
+              <p class="mission-text">
+
+            <section class="card">
+              <h3>Your Mission</h3>
+              <h2>Trash Dash</h2>
+              <p>
+                Clean the city and defeat the garbage monsters.
+              </p>
+            </section>
+          </div>
+        </section>
+      </section>
+
+    </main>
+
+
+
+      <!-- PROFILE TAB (UNCHANGED) -->
+      <section id="profile" class="tab-content">
+        <div class="avatar-placeholder" aria-label="Player avatar"></div>
+      </section>
+    </main>
+
+    <!-- Tab logic -->
+    <script>
+      (function () {
+        var tabButtons = document.querySelectorAll(".tab-button");
+        var tabContents = document.querySelectorAll(".tab-content");
+
+        tabButtons.forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            var target = this.getAttribute("data-tab");
+            if (!target) return;
+
+            tabButtons.forEach((b) => b.classList.remove("active"));
+            tabContents.forEach((c) => c.classList.remove("active"));
+
+            this.classList.add("active");
+            document.getElementById(target)?.classList.add("active");
+          });
+        });
+      })();
+    </script>
+
+    <!-- Leaflet JS (logic later) -->
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <script src="{{ url_for('static', filename='dashboard.js') }}"></script>
+    <script src="{{ url_for('static', filename='map.js') }}"></script>
+  </body>
+</html>
+

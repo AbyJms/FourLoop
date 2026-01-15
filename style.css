@@ -1,0 +1,1190 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background: radial-gradient(circle at top, #141428, #05050a);
+  color: #fff;
+  padding: 20px;
+}
+
+.topbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 30px;
+  position: relative;
+}
+
+.logo {
+  color: #ff0000;
+  font-size: 30px;
+  font-weight: bold;
+  text-shadow: 0 0 10px #ff0000;
+}
+
+.steps span {
+  margin: 0 10px;
+  opacity: 0.4;
+}
+
+.steps .active {
+  color: #ff0000;
+  opacity: 1;
+}
+
+.logout {
+  background: transparent;
+  border: 1px solid #ff0000;
+  color: #ff0000;
+  padding: 6px 14px;
+  border-radius: 6px;
+  position: absolute;
+  right: 0;
+}
+
+.timer-card {
+  border: 1px solid #ff0000;
+  border-radius: 16px;
+  padding: 40px;
+  text-align: center;
+  margin-bottom: 30px;
+  box-shadow: 0 0 30px rgba(255,0,0,0.2);
+}
+
+.label {
+  letter-spacing: 2px;
+  opacity: 0.7;
+  margin-bottom: 10px;
+}
+
+.timer {
+  font-size: 48px;
+  color: #ff0000;
+  text-shadow: 0 0 15px #ff0000;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.card {
+  border: 1px solid #ff0000;
+  border-radius: 16px;
+  padding: 20px;
+  background: rgba(10,10,30,0.6);
+}
+
+.card h3 {
+  margin-bottom: 10px;
+}
+
+.card h2 {
+  margin: 10px 0;
+}
+
+.tag {
+  display: inline-block;
+  background: #d4af37;
+  color: #000;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+.bar {
+  height: 6px;
+  background: #300;
+  border-radius: 4px;
+  margin: 6px 0 14px;
+}
+
+.right {
+  float: right;
+}
+
+.disabled {
+  width: 100%;
+  padding: 10px;
+  background: transparent;
+  border: 1px solid #ff0000;
+  color: #ff0000;
+  border-radius: 8px;
+  opacity: 0.6;
+}
+
+.muted {
+  opacity: 0.6;
+}
+
+.center {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.leaderboard {
+  background: transparent;
+  border: 1px solid #ff0000;
+  color: #ff0000;
+  padding: 10px 30px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(255,0,0,0.4);
+}
+
+/* ---- Extended dashboard layout ---- */
+
+.main-layout {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.tab-button {
+  flex: 0 0 auto;
+  padding: 8px 18px;
+  background: transparent;
+  border: 1px solid rgba(255, 0, 0, 0.5);
+  color: #ff6666;
+  border-radius: 999px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: background 0.2s ease, box-shadow 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.tab-button.active {
+  background: rgba(255, 0, 0, 0.15);
+  border-color: #ff0000;
+  color: #fff;
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+.timer-caption {
+  margin-top: 8px;
+  font-size: 12px;
+  opacity: 0.6;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.dashboard-left,
+.dashboard-right {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.map-card h3 {
+  margin-bottom: 8px;
+}
+
+.zone-name {
+  font-size: 13px;
+  opacity: 0.8;
+  margin-bottom: 10px;
+}
+
+.zone-name span {
+  color: #ff6666;
+}
+
+.map-placeholder {
+  position: relative;
+  border-radius: 14px;
+  border: 1px dashed rgba(255, 0, 0, 0.7);
+  background: radial-gradient(circle at top, #1b1020, #05050a);
+  height: 260px;
+  margin-bottom: 14px;
+  overflow: hidden;
+  box-shadow: inset 0 0 30px rgba(255, 0, 0, 0.3);
+}
+
+.map-label {
+  position: absolute;
+  top: 12px;
+  left: 16px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  opacity: 0.7;
+}
+
+.map-overlay {
+  position: absolute;
+  bottom: 12px;
+  left: 16px;
+  font-size: 12px;
+  opacity: 0.6;
+}
+
+.map-legend {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 11px;
+  background: rgba(5, 5, 10, 0.9);
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 0, 0, 0.4);
+}
+
+.map-legend .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 4px;
+}
+
+.map-legend .dot.main {
+  background: #ff4d4d;
+}
+
+.map-legend .dot.side {
+  background: #ffcc33;
+}
+
+.map-legend .dot.completed {
+  background: #33ff99;
+}
+
+.map-filters {
+  display: flex;
+  gap: 14px;
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+.map-filters input[type="checkbox"] {
+  accent-color: #ff0000;
+}
+
+.boss-and-quests .section-label {
+  font-size: 11px;
+  letter-spacing: 2px;
+  opacity: 0.7;
+  text-transform: uppercase;
+}
+
+.boss-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 14px;
+}
+
+.boss-name {
+  color: #ff6666;
+}
+
+.boss-meta p {
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.boss-meta span {
+  color: #ff6666;
+}
+
+.hp-bar-wrapper {
+  margin-bottom: 10px;
+}
+
+.hp-bar-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+
+.hp-bar {
+  width: 100%;
+  height: 10px;
+  border-radius: 999px;
+  background: #300;
+  overflow: hidden;
+  box-shadow: 0 0 12px rgba(255, 0, 0, 0.5);
+}
+
+.hp-bar-inner {
+  height: 100%;
+  background: linear-gradient(90deg, #ff0000, #ffcc33);
+}
+
+.cycle-timer-inline {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  margin-bottom: 12px;
+}
+
+.cycle-time {
+  color: #ff6666;
+  font-family: monospace;
+}
+
+.quests-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.quests-list h3 {
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+.quests-list ul {
+  list-style: disc;
+  margin-left: 16px;
+  font-size: 13px;
+  opacity: 0.9;
+}
+
+/* Mission card typography */
+.mission-title {
+  font-size: 14px; /* match "Active Main Quests" */
+  color: #ff6666; /* match "Queen of Plastics" */
+}
+
+.mission-text {
+  font-size: 13px; /* match quest list items */
+}
+
+.primary-btn {
+  background: #ff0000;
+  color: #fff;
+  border-radius: 999px;
+  border: none;
+  padding: 8px 18px;
+  cursor: pointer;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 0 18px rgba(255, 0, 0, 0.6);
+}
+
+.add-side-quest {
+  margin-top: 10px;
+  width: 100%;
+}
+
+.card-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.tiny-btn {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: transparent;
+  border: 1px solid rgba(255, 0, 0, 0.6);
+  color: #ff9999;
+  font-size: 11px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.party-list {
+  list-style: none;
+  font-size: 13px;
+}
+
+.party-list li {
+  display: grid;
+  grid-template-columns: 2fr 2fr 1fr;
+  gap: 6px;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255, 0, 0, 0.15);
+}
+
+.party-name {
+  font-weight: 600;
+}
+
+.party-role {
+  opacity: 0.8;
+}
+
+.party-status {
+  text-align: right;
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.party-status.online {
+  color: #33ff99;
+}
+
+.party-status.ingame {
+  color: #ffcc33;
+}
+
+.party-status.offline {
+  color: #666;
+}
+
+.leaderboard-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 10px;
+}
+
+.leaderboard-list {
+  list-style: decimal;
+  margin-left: 18px;
+  font-size: 13px;
+}
+
+.leaderboard-list li {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.leaderboard-list .score {
+  color: #ff6666;
+  font-family: monospace;
+}
+
+.rewards-card .reward-row {
+  margin-bottom: 10px;
+}
+
+.reward-label {
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.reward-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.reward-value {
+  font-size: 16px;
+  color: #ff6666;
+}
+
+.bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ff0000, #ffcc33);
+  border-radius: 4px;
+}
+
+/* ---- Profile tab ---- */
+
+.profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.profile-main {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.avatar-placeholder {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 2px solid #ff0000;
+  box-shadow: 0 0 18px rgba(255, 0, 0, 0.5);
+  background: radial-gradient(circle at 30% 30%, #ff4d4d, #140414);
+}
+
+.section-label {
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.profile-username {
+  margin: 4px 0;
+}
+
+.current-title span {
+  color: #ff6666;
+}
+
+.title-badge {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.profile-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.secondary-btn {
+  background: transparent;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 0, 0, 0.6);
+  color: #ffcccc;
+  padding: 8px 18px;
+  cursor: pointer;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.profile-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 6px;
+}
+
+.stat-label {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.stat-value {
+  font-size: 18px;
+  color: #ff6666;
+}
+
+.profile-list {
+  list-style: none;
+  font-size: 13px;
+}
+
+.profile-list li {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.badge-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.badge {
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 0, 0, 0.6);
+  background: rgba(255, 0, 0, 0.08);
+}
+
+/* ---- Store / Redeem tab ---- */
+
+.store-header-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.store-header-main h2 {
+  margin-bottom: 4px;
+}
+
+.store-subtitle {
+  font-size: 13px;
+  opacity: 0.7;
+}
+
+.store-balance {
+  text-align: right;
+}
+
+.store-balance-label {
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.store-balance-value {
+  font-size: 20px;
+  color: #ff6666;
+}
+
+.store-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.store-card h3 {
+  margin-bottom: 6px;
+  font-size: 15px;
+}
+
+.store-desc {
+  font-size: 13px;
+  opacity: 0.85;
+  margin-bottom: 10px;
+}
+
+.store-meta {
+  font-size: 12px;
+  opacity: 0.85;
+  margin-bottom: 10px;
+}
+
+.store-meta .highlight {
+  color: #ff6666;
+}
+
+.store-owned-row,
+.store-status-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+
+.store-owned-count {
+  font-family: monospace;
+}
+
+.store-status {
+  color: #ffcc33;
+}
+
+.store-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.store-actions .primary-btn[disabled] {
+  opacity: 0.4;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+/* ---- Auth (Login / Register) ---- */
+
+.auth-layout {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 120px);
+}
+
+.auth-card {
+  max-width: 600px;
+  width: 100%;
+}
+
+.auth-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.auth-tab {
+  flex: 1;
+  padding: 8px 0;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 0, 0, 0.6);
+  background: transparent;
+  color: #ff9999;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 1px;
+  cursor: pointer;
+}
+
+.auth-tab.active {
+  background: rgba(255, 0, 0, 0.2);
+  color: #fff;
+  box-shadow: 0 0 16px rgba(255, 0, 0, 0.6);
+}
+
+.auth-panel {
+  display: none;
+}
+
+.auth-panel.active {
+  display: block;
+}
+
+.auth-title {
+  margin-bottom: 4px;
+}
+
+.auth-subtitle {
+  font-size: 13px;
+  opacity: 0.7;
+  margin-bottom: 16px;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.auth-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+}
+
+.auth-field span {
+  opacity: 0.8;
+}
+
+.auth-field input {
+  background: rgba(5, 5, 15, 0.9);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 0, 0, 0.4);
+  padding: 8px 10px;
+  color: #fff;
+  outline: none;
+}
+
+.auth-field input:focus {
+  border-color: #ff0000;
+  box-shadow: 0 0 12px rgba(255, 0, 0, 0.6);
+}
+
+.auth-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.auth-primary-btn {
+  flex: 1;
+  justify-content: center;
+}
+
+.auth-secondary-btn {
+  font-size: 11px;
+  padding: 6px 10px;
+}
+
+.auth-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+/* ---- Responsive tweaks ---- */
+@media (max-width: 960px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .leaderboard-columns {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .store-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  body {
+    padding: 16px;
+  }
+
+  .topbar {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .profile-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .profile-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .quests-columns {
+    grid-template-columns: 1fr;
+  }
+
+  .tabs {
+    overflow-x: auto;
+  }
+
+  .store-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ================= MAP FEATURE ================= */
+
+.map-wrapper {
+  position: relative;
+  height: 260px;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.6);
+  background: #05050a;
+  /* Soft outer shadow to make the map feel inset / glowing */
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.9);
+}
+
+#zoneMap {
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  /* Normal, untinted tiles */
+  filter: none;
+}
+
+.map-fullscreen-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 900;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 0, 0, 0.35);
+  background: rgba(20, 20, 30, 0.85);
+  color: #fff;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+}
+
+.map-fullscreen-btn:hover {
+  background: rgba(35, 35, 50, 0.9);
+}
+
+.map-wrapper.is-fullscreen {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  border-radius: 0;
+  border: none;
+  box-shadow: none;
+  z-index: 3000;
+  background: #000;
+}
+
+.map-wrapper.is-fullscreen .map-fullscreen-btn {
+  top: 16px;
+  right: 16px;
+  background: rgba(0, 0, 0, 0.75);
+}
+
+#zoneMap {
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  /* Normal, untinted tiles */
+  filter: none;
+}
+
+/* overlay text */
+.map-label {
+  position: absolute;
+  top: 12px;
+  left: 16px;
+  font-size: 12px;
+  letter-spacing: 2px;
+  opacity: 0.8;
+  z-index: 500;
+}
+
+/* legend */
+.map-legend {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 11px;
+  background: rgba(5, 5, 10, 0.9);
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 0, 0, 0.4);
+  z-index: 500;
+}
+
+.map-legend .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.map-legend .main {
+  background: #ff4d4d;
+}
+
+.map-legend .side {
+  background: #ffcc33;
+}
+
+.map-legend .completed {
+  background: #33ff99;
+}
+
+/* Fix Leaflet background for dark UI */
+.leaflet-container {
+  background: #05050a;
+}
+
+/* REQUIRED for Leaflet to render tiles */
+.leaflet-container,
+.leaflet-pane,
+.leaflet-map-pane,
+.leaflet-tile-pane,
+.leaflet-layer,
+.leaflet-tile {
+  width: 100%;
+  height: 100%;
+}
+
+.avatar-placeholder {
+  width: 64px;
+  height: 64px;
+
+  background-image: url("you.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  border-radius: 6px;
+  border: 2px solid #ff0000;
+  box-shadow: 0 0 18px rgba(255, 0, 0, 0.5);
+
+  flex-shrink: 0;   /* IMPORTANT */
+}
+
+.user-map-icon {
+  border-radius: 6px;
+  border: 2px solid #ff0000;
+  box-shadow: 0 0 12px rgba(255, 0, 0, 0.7);
+  background-color: #000;
+}
+
+.demogorgan-icon {
+  border-radius: 50%;
+  border: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+/* --- Seeker Dashboard Spacing Fix --- */
+
+.seeker-grid {
+  gap: 40px;
+}
+
+.card.spacious {
+  padding: 28px 32px;
+  margin-bottom: 28px;
+}
+
+.card h3 {
+  margin-bottom: 18px;
+}
+
+.seeker-list li,
+.verify-list li {
+  margin-bottom: 14px;
+  line-height: 1.6;
+}
+
+.card-actions {
+  margin-top: 22px;
+}
+
+.action-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+.dashboard-left,
+.dashboard-right {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.role-tag {
+  font-size: 14px;
+  opacity: 0.8;
+  margin-left: 6px;
+}
+
+/* =========================
+   Seeker Post Form Styling
+========================= */
+
+.seeker-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 14px;
+}
+
+.seeker-field input,
+.seeker-field textarea,
+.seeker-field select {
+  background: rgba(5, 5, 15, 0.9);
+  border: 1px solid rgba(255, 0, 0, 0.4);
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: #fff;
+  outline: none;
+}
+
+.seeker-field textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.seeker-field input:focus,
+.seeker-field textarea:focus,
+.seeker-field select:focus {
+  border-color: #ff0000;
+  box-shadow: 0 0 12px rgba(255, 0, 0, 0.6);
+}
+
+.seeker-field input[readonly] {
+  opacity: 0.7;
+}
+
+.auth-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+}
+
+.auth-form-field span {
+  opacity: 0.8;
+}
+
+.auth-form-field input {
+  background: rgba(5, 5, 15, 0.9);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 0, 0, 0.4);
+  padding: 8px 10px;
+  color: #fff;
+  outline: none;
+}
+
+.auth-form-field input:focus {
+  border-color: #ff0000;
+  box-shadow: 0 0 12px rgba(255, 0, 0, 0.6);
+}
+
+.auth-form-field textarea {
+  background: rgba(5, 5, 15, 0.9);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 0, 0, 0.4);
+  padding: 8px 10px;
+  color: #fff;
+  outline: none;
+  resize: vertical;
+}
+
+.auth-form-field textarea:focus {
+  border-color: #ff0000;
+  box-shadow: 0 0 12px rgba(255, 0, 0, 0.6);
+}
+/* =========================
+   Mission Inner Cards
+========================= */
+
+.quest-card {
+  border: 1px solid #ff0000;
+  color: #ffffff;
+}
+
+.quest-card h4 {
+  color: #ffffff;
+}
+
+.quest-card p {
+  color: #fffefe;
+  opacity: 0.9;
+}
+
+.quest-card .quest-meta li {
+  color: #ffffff;
+}
+
+.quest-card .quest-tag.main,
+.quest-card .quest-tag.side {
+  font-weight: 700;
+}
+
+.quest-meta {
+  list-style-position: inside;
+  padding-left: 1.5em; /* this is the “tab space” */
+}
+
+.heading{
+  color: #ff0404;
+}

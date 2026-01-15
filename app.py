@@ -1,117 +1,167 @@
-<<<<<<< HEAD
-import os
-from flask import Flask
-from flask_migrate import Migrate
-from flask_cors import CORS
-from flask_jwt_extended import JWTManager
-from config import config
-from models import db
+from flask import Flask, request, jsonify, session, render_template, redirect
+from db import mysql, init_db
 
-# Import blueprints
-from routes.auth import auth_bp
-from routes.users import users_bp
-from routes.reports import reports_bp
-from routes.collections import collections_bp
-from routes.store import store_bp
-from routes.leaderboard import leaderboard_bp
+app = Flask(__name__, static_folder="static", template_folder="templates")
+app.secret_key = "trash-secret-key"
 
-def create_app(config_name='default'):
-    """Application factory pattern."""
-    app = Flask(__name__)
-    
-    # Load configuration
-    app.config.from_object(config[config_name])
-    
-    # Initialize extensions
-    db.init_app(app)
-    migrate = Migrate(app, db)
-    CORS(
-    app,
-    resources={r"/api/*": {"origins": "*"}},
-    supports_credentials=True,
-    allow_headers=["Content-Type", "Authorization"]
-)
+init_db(app)
 
+# --------------------
+# PAGES
+# --------------------
 
-    jwt = JWTManager(app)
-    @app.after_request
-    def add_cors_headers(response):
-        response.headers["Access-Control-Allow-Origin"] = "*"
-        response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
-        response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
-        return response
+@app.get("/")
+def auth_page():
+    return render_template("auth.html")
 
-    # Create upload folder if it doesn't exist
-    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
-    
-    # Register blueprints
-    app.register_blueprint(auth_bp, url_prefix='/api/auth')
-    app.register_blueprint(users_bp, url_prefix='/api/users')
-    app.register_blueprint(reports_bp, url_prefix='/api/reports')
-    app.register_blueprint(collections_bp, url_prefix='/api/collections')
-    app.register_blueprint(store_bp, url_prefix='/api/store')
-    app.register_blueprint(leaderboard_bp, url_prefix='/api/leaderboard')
-    
-    # Health check endpoint
-    @app.route('/api/health')
-    def health():
-        return {'status': 'healthy', 'message': 'FourLoop API is running'}
-    
-    # Error handlers
-    @app.errorhandler(404)
-    def not_found(error):
-        return {'error': 'Resource not found'}, 404
-    
-    @app.errorhandler(500)
-    def internal_error(error):
-        db.session.rollback()
-        return {'error': 'Internal server error'}, 500
-    
-    @jwt.expired_token_loader
-    def expired_token_callback(jwt_header, jwt_payload):
-        return {'error': 'Token has expired'}, 401
-    
-    @jwt.invalid_token_loader
-    def invalid_token_callback(error):
-        return {'error': 'Invalid token'}, 401
-    
-    @jwt.unauthorized_loader
-    def missing_token_callback(error):
-        return {'error': 'Authorization token is missing'}, 401
-    
-    return app
+@app.get("/dashboard")
+def dashboard_page():
+    if "uid" not in session:
+        return redirect("/")
+    return render_template("dashboard.html")
 
-if __name__ == '__main__':
-    app = create_app(os.environ.get('FLASK_ENV', 'development'))
-    app.run(debug=True, host='0.0.0.0', port=5000)
-=======
-from flask import Flask, request, jsonify
+@app.get("/mission")
+def mission_page():
+    if "uid" not in session:
+        return redirect("/")
+    return render_template("mission.html")
 
-app = Flask(__name__)
+@app.get("/profile")
+def profile_page():
+    if "uid" not in session:
+        return redirect("/")
+    return render_template("profile.html")
 
-# Example user loader function
-def load_user(user_id):
-    # Replace this with actual user lookup logic
-    return {"id": user_id, "name": "Test User"}
+@app.get("/store")
+def store_page():
+    if "uid" not in session:
+        return redirect("/")
+    return render_template("store.html")
 
-# Register route
-@app.route("/register", methods=["POST"])
+@app.post("/logout")
+def logout():
+    session.clear()
+    return jsonify({"ok": True})
+
+# --------------------
+# AUTH
+# --------------------
+
+@app.post("/register")
 def register():
-    data = request.get_json()
-    # Replace with actual registration logic
-    username = data.get("username")
-    password = data.get("password")
-    return jsonify({"message": f"User {username} registered successfully!"})
+    data = request.json
+    cur = mysql.connection.cursor()
+    cur.execute(
+        "INSERT INTO users (username, email, password) VALUES (%s,%s,%s)",
+        (data["username"], data["email"], data["password"]),
+    )
+    mysql.connection.commit()
+    cur.close()
+    return jsonify({"ok": True})
 
-# Login route
-@app.route("/login", methods=["POST"])
+@app.post("/login")
 def login():
-    data = request.get_json()
-    username = data.get("username")
-    password = data.get("password")
-    # Replace with actual login check
-    return jsonify({"message": f"User {username} logged in successfully!"})
+    data = request.json
+    cur = mysql.connection.cursor()
+    cur.execute(
+        "SELECT id FROM users WHERE username=%s AND password=%s",
+        (data["username"], data["password"]),
+    )
+    row = cur.fetchone()
+    cur.close()
+
+    if not row:
+        return jsonify({"error": "Invalid credentials"}), 401
+
+    session["uid"] = row[0]
+    return jsonify({"ok": True})
+
+# --------------------
+# DATA API
+# --------------------
+
+@app.get("/api/dashboard")
+def dashboard_data():
+    if "uid" not in session:
+        return jsonify({"error": "Not logged in"}), 401
+
+    cur = mysql.connection.cursor()
+
+    # User info + title
+    cur.execute("""
+        SELECT u.username, u.points, u.credits, u.total_points, t.name
+        FROM users u
+        LEFT JOIN titles t ON u.title_id = t.id
+        WHERE u.id = %s
+    """, (session["uid"],))
+    u = cur.fetchone()
+
+    # Leaderboard (top 10)
+    cur.execute("""
+        SELECT username, total_points
+        FROM users
+        ORDER BY total_points DESC
+        LIMIT 10
+    """)
+    leaderboard = cur.fetchall()
+
+    # Rank
+    cur.execute("""
+        SELECT COUNT(*) + 1
+        FROM users
+        WHERE total_points > %s
+    """, (u[3],))
+    rank = cur.fetchone()[0]
+
+    cur.close()
+
+    return jsonify({
+        "user": {
+            "username": u[0],
+            "points": u[1],
+            "credits": u[2],
+            "total_points": u[3],
+            "title": u[4],
+            "rank": rank
+        },
+        "leaderboard": [
+            {"username": r[0], "points": r[1]} for r in leaderboard
+        ],
+        "currentZone": "Crimson Wastefront",
+        "boss": {"name": "Demo-garbage", "hp": 42}
+    })
+
+@app.get("/api/profile")
+def profile_data():
+    if "uid" not in session:
+        return jsonify({"error": "Not logged in"}), 401
+
+    cur = mysql.connection.cursor()
+    cur.execute("""
+        SELECT u.username, u.points, u.credits, u.total_points, t.name
+        FROM users u
+        LEFT JOIN titles t ON u.title_id = t.id
+        WHERE u.id = %s
+    """, (session["uid"],))
+    u = cur.fetchone()
+
+    cur.execute("""
+        SELECT COUNT(*) + 1
+        FROM users
+        WHERE total_points > %s
+    """, (u[3],))
+    rank = cur.fetchone()[0]
+
+    cur.close()
+
+    return jsonify({
+        "username": u[0],
+        "points": u[1],
+        "credits": u[2],
+        "total_points": u[3],
+        "title": u[4],
+        "rank": rank
+    })
 
 if __name__ == "__main__":
     app.run(debug=True)
->>>>>>> origin/main
